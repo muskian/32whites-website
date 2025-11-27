@@ -267,7 +267,7 @@
             <p class="text-center text-gray-600 mb-12">Dental tips, news, and insights</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Blog Post 1 -->
-                <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition cursor-pointer" onclick="window.location.href='#blog-kids'">
+                <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition cursor-pointer" onclick="showBlog('blog-kids')">
                     <div class="h-48 bg-gradient-to-br from-blue-100 to-pink-100 flex items-center justify-center text-6xl">
                         👶
                     </div>
@@ -279,7 +279,7 @@
                     </div>
                 </div>
                 <!-- Blog Post 2 -->
-                <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition cursor-pointer" onclick="window.location.href='#blog-rct'">
+                <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition cursor-pointer" onclick="showBlog('blog-rct')">
                     <div class="h-48 bg-gradient-to-br from-green-100 to-pink-100 flex items-center justify-center text-6xl">
                         🦷
                     </div>
@@ -291,7 +291,7 @@
                     </div>
                 </div>
                 <!-- Blog Post 3 -->
-                <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition cursor-pointer" onclick="window.location.href='#blog-cleaning'">
+                <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition cursor-pointer" onclick="showBlog('blog-cleaning')">
                     <div class="h-48 bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center text-6xl">
                         ✨
                     </div>
@@ -311,7 +311,7 @@
     <!-- Blog 1: Kids -->
     <section id="blog-kids" class="py-20 bg-white hidden">
         <div class="container mx-auto px-4 max-w-3xl">
-            <button onclick="document.getElementById('blog-kids').classList.add('hidden')" class="text-blue-600 hover:underline mb-4">← Back to Blogs</button>
+            <button onclick="hideBlog('blog-kids')" class="text-blue-600 hover:underline mb-4">← Back to Blogs</button>
             <article>
                 <div class="text-6xl text-center mb-6">👶🪥</div>
                 <h1 class="text-4xl font-bold mb-4 text-center">5 Fun Ways to Make Your Child Love Brushing</h1>
@@ -368,7 +368,7 @@
     <!-- Blog 2: RCT -->
     <section id="blog-rct" class="py-20 bg-white hidden">
         <div class="container mx-auto px-4 max-w-3xl">
-            <button onclick="document.getElementById('blog-rct').classList.add('hidden')" class="text-blue-600 hover:underline mb-4">← Back to Blogs</button>
+            <button onclick="hideBlog('blog-rct')" class="text-blue-600 hover:underline mb-4">← Back to Blogs</button>
             <article>
                 <div class="text-6xl text-center mb-6">🦷💉</div>
                 <h1 class="text-4xl font-bold mb-4 text-center">Root Canal Treatment: What Actually Happens?</h1>
@@ -450,7 +450,7 @@
     <!-- Blog 3: Teeth Cleaning -->
     <section id="blog-cleaning" class="py-20 bg-white hidden">
         <div class="container mx-auto px-4 max-w-3xl">
-            <button onclick="document.getElementById('blog-cleaning').classList.add('hidden')" class="text-blue-600 hover:underline mb-4">← Back to Blogs</button>
+            <button onclick="hideBlog('blog-cleaning')" class="text-blue-600 hover:underline mb-4">← Back to Blogs</button>
             <article>
                 <div class="text-6xl text-center mb-6">✨🦷</div>
                 <h1 class="text-4xl font-bold mb-4 text-center">Professional Teeth Cleaning: Is It Really Worth It?</h1>
@@ -658,6 +658,23 @@
                 closeModal();
             }
         });
+
+        // Blog navigation
+        function showBlog(blogId) {
+            // Hide all blogs first
+            document.querySelectorAll('[id^="blog-"]').forEach(blog => {
+                blog.classList.add('hidden');
+            });
+            // Show selected blog
+            document.getElementById(blogId).classList.remove('hidden');
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        function hideBlog(blogId) {
+            document.getElementById(blogId).classList.add('hidden');
+            window.scrollTo(0, 0);
+        }
     </script>
 </body>
 </html>
