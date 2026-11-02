@@ -1,0 +1,32 @@
+{
+  "name": "32-whites-website",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1",
+    "build": "astro check && astro build && node scripts/verify-build.mjs && node scripts/generate-review-packet.mjs",
+    "preview": "node scripts/serve-preview.mjs",
+    "check": "astro check",
+    "test": "node --test --test-isolation=none tests/*.test.mjs",
+    "review-packet": "node scripts/generate-review-packet.mjs",
+    "audit:site": "node scripts/audit-site.mjs",
+    "audit:artifact": "node scripts/audit-artifact.mjs",
+    "preflight:runtime": "node scripts/check-runtime.mjs"
+  },
+  "engines": {
+    "node": ">=24.22.1 <25"
+  },
+  "dependencies": {
+    "astro": "7.3.5",
+    "tailwindcss": "4.3.3",
+    "@tailwindcss/vite": "4.3.3",
+    "@fontsource/manrope": "5.3.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "typescript": "6.0.3",
+    "@types/node": "26.6.3",
+    "csso": "5.0.5"
+  }
+}

@@ -1,0 +1,10 @@
+---
+import Icon from './Icon.astro';
+import {clinic} from '../data/clinic';
+---
+<dl class="visit-facts">
+  <div><Icon name="clock" size={20}/><div><dt>Opening hours</dt><dd>{clinic.hours}<br/>{clinic.sunday}</dd></div></div>
+  <div><Icon name="pin" size={20}/><div><dt>Address</dt><dd>{clinic.address}</dd></div></div>
+  <div><Icon name="stairs" size={20}/><div><dt>Getting in</dt><dd>{clinic.parking}. {clinic.access}; call ahead if stairs are difficult.</dd></div></div>
+  <div><Icon name="language" size={20}/><div><dt>Languages</dt><dd>{clinic.languages.join(' · ')}</dd></div></div>
+</dl>

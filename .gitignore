@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.*
+!.env.example
+.npm-cache/
+qa/screenshots/
+.playwright-cli/
+.runtime/
+
+qa/build-report.json
+qa/editorial-gate-report.json
+qa/clinical-review-packet.md
+output/

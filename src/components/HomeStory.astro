@@ -1,0 +1,114 @@
+---
+import '../styles/story.css';
+---
+<!-- Presentation only: all patient information stays in the original main HTML. -->
+<div class="scroll-scene" aria-hidden="true" data-scroll-scene>
+  <img class="scene-tooth" src="/images/hero-clinic-1200.webp" srcset="/images/hero-clinic-600.webp 600w, /images/hero-clinic-1200.webp 1200w" sizes="100vw" width="1536" height="1024" alt="" decoding="async"/>
+  <span class="scene-caption">An illustration inspired by our clinic.</span>
+</div>
+<div class="story-readout" aria-hidden="true" hidden data-story-readout>
+  <span data-story-label>01 / Your concern</span><span class="story-meter"><i></i></span><span>Scroll to explore ↓</span>
+</div>
+<button class="story-motion" type="button" hidden data-story-motion aria-pressed="false">Read without motion</button>
+<script>
+  import {storyFrame} from '../lib/story-frame.mjs';
+  const hero = document.querySelector<HTMLElement>('.hero-shell');
+  const scene = document.querySelector<HTMLElement>('[data-scroll-scene]');
+  const readout = document.querySelector<HTMLElement>('[data-story-readout]');
+  const label = document.querySelector<HTMLElement>('[data-story-label]');
+  const motion = document.querySelector<HTMLButtonElement>('[data-story-motion]');
+  const root = document.documentElement;
+  const copy = document.querySelector<HTMLElement>('.patient-hero-copy');
+  const arrival = document.querySelector<HTMLElement>('.hero-image-column');
+  const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const compact = window.matchMedia('(max-width: 379px), (max-width: 767px) and (max-height: 739px), (max-height: 599px)');
+  const canAnimate = () => !preference.matches && !compact.matches;
+  if (hero && scene && readout && label && motion) {
+    let enabled = false;
+    let queued = false;
+    let positions: {top: number; label: string}[] = [];
+    let heroTop = 0, heroHeight = 0, headerHeight = 0, pageEnd = 1;
+    const chapters = [
+      ['#concern-heading', '02 / What you’ve noticed'],
+      ['#services-heading', '03 / Explore your options'],
+      ['#doctor-heading', '04 / Meet your dentist'],
+      ['#reviews-heading', '05 / Hear from patients'],
+      ['#visit-heading', '06 / Plan your visit'],
+      ['#faq-heading', '07 / Bring your questions'],
+      ['#guides-heading', '08 / A little preparation'],
+      ['#final-cta-heading', '09 / Your next step'],
+    ];
+    const sections = [...document.querySelectorAll<HTMLElement>('main > section, main > .reviews-band > .container')];
+    const observer = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
+      entries.forEach(entry => {if (entry.isIntersecting) {entry.target.classList.add('story-visible'); observer?.unobserve(entry.target);}});
+    }, {rootMargin: '0px 0px 8% 0px', threshold: 0.04}) : null;
+    function measure() {
+      if (!hero) return;
+      heroTop = hero.getBoundingClientRect().top + window.scrollY;
+      heroHeight = hero.offsetHeight;
+      headerHeight = document.querySelector('header')?.getBoundingClientRect().height ?? 70;
+      positions = chapters.flatMap(([selector, text]) => {
+        const el = document.querySelector(selector);
+        return el ? [{top: el.getBoundingClientRect().top + window.scrollY, label: text}] : [];
+      });
+      pageEnd = Math.max(1, (document.querySelector('footer')?.getBoundingClientRect().top ?? 0) + window.scrollY - window.innerHeight);
+      requestPaint();
+    }
+    function paint() {
+      queued = false;
+      if (!enabled || !scene || !readout || !label) return;
+      const y = window.scrollY;
+      const frame = storyFrame(y - heroTop, heroHeight, window.innerHeight, headerHeight);
+      root.style.setProperty('--story-turn', `${frame.turn}deg`);
+      root.style.setProperty('--story-scale', String(frame.scale));
+      root.style.setProperty('--story-lift', `${frame.lift}px`);
+      root.style.setProperty('--story-copy', String(frame.copy));
+      root.style.setProperty('--story-photo', String(frame.photo));
+      root.style.setProperty('--story-wash', `rgb(${frame.wash.join(' ')})`);
+      root.style.setProperty('--story-progress', `${Math.min(100, Math.max(0, y / pageEnd * 100))}%`);
+      scene.hidden = frame.finished;
+      // Fully faded panels must not leave invisible clickable/tabbable links.
+      if (copy) copy.inert = frame.copy <= .01 && !copy.contains(document.activeElement);
+      if (arrival) arrival.inert = frame.photo <= .01 && !arrival.contains(document.activeElement);
+      readout.hidden = y > pageEnd + window.innerHeight * .45;
+      motion!.hidden = readout.hidden;
+      label.textContent = frame.photo > .5 ? '01 / Your visit starts here' : '01 / Your concern';
+      for (const chapter of positions) {if (chapter.top < y + window.innerHeight * .52) label.textContent = chapter.label;}
+    }
+    function requestPaint() {if (enabled && !queued) {queued = true; requestAnimationFrame(paint);}}
+    function setEnabled(value: boolean) {
+      value = value && canAnimate();
+      enabled = value;
+      root.classList.toggle('story-active', value);
+      if (copy) copy.inert = false;
+      if (arrival) arrival.inert = false;
+      scene!.hidden = !value; readout!.hidden = !value;
+      motion!.hidden = !canAnimate();
+      motion!.textContent = value ? 'Read without motion' : 'Enable scroll story';
+      motion!.setAttribute('aria-pressed', String(!value));
+      sections.forEach(section => {
+        section.classList.remove('story-reveal', 'story-visible');
+        observer?.unobserve(section);
+        if (value && observer) {section.classList.add('story-reveal'); observer.observe(section);}
+      });
+      measure();
+    }
+    motion.addEventListener('click', () => {
+      // Keep the same reading position when the pinned introduction changes height.
+      const previousHeight = hero.offsetHeight, previousEnd = heroTop + previousHeight;
+      const y = window.scrollY;
+      setEnabled(!enabled);
+      if (y >= previousEnd) window.scrollBy({top: hero.offsetHeight - previousHeight, behavior: 'instant'});
+      else if (!enabled && y > heroTop) window.scrollTo({top: heroTop, behavior: 'instant'});
+      measure();
+    });
+    preference.addEventListener('change', () => setEnabled(canAnimate()));
+    compact.addEventListener('change', () => setEnabled(canAnimate()));
+    window.addEventListener('scroll', requestPaint, {passive: true});
+    window.addEventListener('resize', measure, {passive: true});
+    setEnabled(canAnimate());
+    document.fonts.ready.then(measure);
+    if ('ResizeObserver' in window) new ResizeObserver(measure).observe(document.querySelector('main')!);
+    window.addEventListener('pageshow', measure);
+  }
+</script>

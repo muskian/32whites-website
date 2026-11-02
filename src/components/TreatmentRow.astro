@@ -1,0 +1,10 @@
+---
+import Icon from './Icon.astro';
+import TreatmentVisual from './TreatmentVisual.astro';
+import {patientCopy} from '../data/patient-copy';
+import type {Treatment} from '../data/treatments';
+interface Props { treatment: Treatment }
+const {treatment: t} = Astro.props;
+const copy = patientCopy[t.slug];
+---
+<a class={`service-row service-${copy.variant}`} href={`/services/${t.slug}/`}><div class="service-row-art"><TreatmentVisual variant={copy.variant} id={`row-${t.slug}`}/></div><div><h3>{t.name}</h3><p>{copy.summary}</p></div><Icon name="arrow" size={18}/></a>

@@ -1,0 +1,78 @@
+---
+import Icon from './Icon.astro';
+import {treatments} from '../data/treatments';
+import {symptoms} from '../data/symptoms';
+import {guides} from '../data/guides';
+const aliases: Record<string, string> = {'root-canal-treatment':'rct tooth pain infection', 'braces-aligners':'crooked teeth orthodontics straight clear aligners invisible transparent', 'dental-implants':'missing tooth replacement', 'kids-dentistry':'child children pediatric paediatric', 'dental-cleaning':'scaling polishing plaque', 'crowns-bridges':'cap tooth replacement', 'smile-makeover':'bonding gap veneer veneers cosmetic', 'gum-treatment':'bleeding swollen gums'};
+const records = [
+  ...treatments.map(item => ({title: item.name, href: `/services/${item.slug}/`, keywords: `${item.summary} ${aliases[item.slug] ?? ''}`, category: 'Treatment'})),
+  ...symptoms.map(item => ({title: item.name, href: `/symptoms/${item.slug}/`, keywords: item.intro, category: 'Concern'})),
+  ...guides.map(item => ({title: item.title, href: `/blog/${item.slug}/`, keywords: item.description, category: 'Patient guide'})),
+  {title:'Meet Dr. Bhakti — BDS & registration',href:'/doctors/dr-bhakti-ghanwat-gavade/',keywords:'doctor dentist bhakti qualifications education credentials college registration',category:'Your dentist'},
+  {title:'Visit, contact & appointments',href:'/contact/',keywords:'phone call whatsapp parking stairs access address opening hours Sunday language english hindi marathi Keshavnagar Mundhwa Pune booking',category:'Clinic'},
+  {title:'Costs & treatment estimates',href:'/pricing/',keywords:'price fee cost consultation budget payment estimate',category:'Planning'},
+  {title:'Google reviews & rating',href:'/reviews/',keywords:'patient reviews testimonials ratings experience google',category:'Reviews'},
+  {title:'Clinical updates',href:'/our-work/',keywords:'case work root canal bonding sterilisation autoclave clinic',category:'Clinic'},
+];
+---
+<button class="search-toggle" type="button" aria-label="Search treatments and clinic information" aria-haspopup="dialog" aria-controls="site-search" aria-keyshortcuts="Control+K Meta+K /" disabled><Icon name="search" size={17}/><span class="search-toggle-label">Search</span><kbd data-search-shortcut>Ctrl K</kbd></button>
+<dialog id="site-search" class="search-dialog" aria-labelledby="search-heading" data-search-index={JSON.stringify(records)}>
+  <h2 id="search-heading" class="sr-only">Search 32 Whites</h2>
+  <div class="search-field"><Icon name="search" size={20}/><label for="site-search-input" class="sr-only">Search treatments, concerns or clinic information</label><input id="site-search-input" type="search" placeholder="Search tooth pain, parking, costs…" autocomplete="off" role="combobox" aria-expanded="true" aria-controls="search-results" aria-autocomplete="list"/><button type="button" class="search-close" aria-label="Close search">Esc</button></div>
+  <div class="search-body"><p class="search-status" role="status" aria-live="polite"></p><ul class="search-results" id="search-results" role="listbox" aria-label="Search results"></ul></div>
+  <div class="search-footer"><span><kbd>↑</kbd><kbd>↓</kbd> to move</span><span><kbd>↵</kbd> to open</span><p>Information to prepare for a visit, not a diagnosis.</p></div>
+</dialog>
+<script>
+  import {searchPages, type SearchRecord} from '../lib/search.mjs';
+  const trigger = document.querySelector<HTMLButtonElement>('.search-toggle');
+  const dialog = document.querySelector<HTMLDialogElement>('#site-search');
+  const input = dialog?.querySelector<HTMLInputElement>('input');
+  const results = dialog?.querySelector<HTMLUListElement>('.search-results');
+  const status = dialog?.querySelector<HTMLElement>('.search-status');
+  const records: SearchRecord[] = JSON.parse(dialog?.dataset.searchIndex ?? '[]');
+  const isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+  document.querySelectorAll<HTMLElement>('[data-search-shortcut]').forEach(el => { el.textContent = isMac ? '⌘K' : 'Ctrl K'; });
+  let active = 0;
+  const options = () => [...(results?.querySelectorAll<HTMLAnchorElement>('a') ?? [])];
+  function highlight(index: number) {
+    const items = options();
+    if (!items.length || !input) return;
+    active = (index + items.length) % items.length;
+    items.forEach((item, i) => item.setAttribute('aria-selected', String(i === active)));
+    input.setAttribute('aria-activedescendant', items[active].id);
+    items[active].scrollIntoView({block: 'nearest'});
+  }
+  function render() {
+    if (!results || !status || !input) return;
+    const query = input.value.trim();
+    const matches = searchPages(records, query);
+    results.replaceChildren();
+    matches.forEach((item, i) => {
+      const li = document.createElement('li'); li.setAttribute('role', 'presentation');
+      const link = document.createElement('a'); link.href = item.href; link.id = `search-option-${i}`; link.setAttribute('role', 'option');
+      const title = document.createElement('strong'); title.textContent = item.title;
+      const category = document.createElement('span'); category.textContent = item.category;
+      link.append(title, category); li.append(link); results.append(li);
+    });
+    status.textContent = matches.length ? (query ? `${matches.length} ${matches.length === 1 ? 'result' : 'results'}` : 'Popular treatments') : 'No matching page. Try another word, or call the clinic.';
+    if (matches.length) highlight(0); else input.removeAttribute('aria-activedescendant');
+  }
+  function open() { if (!dialog || !input || dialog.open) return; dialog.showModal(); input.value = ''; render(); input.focus(); }
+  if (trigger && dialog && input) {
+    trigger.disabled = false;
+    trigger.addEventListener('click', open);
+    input.addEventListener('input', render);
+    input.addEventListener('keydown', event => {
+      if (event.key === 'ArrowDown') { event.preventDefault(); highlight(active + 1); }
+      else if (event.key === 'ArrowUp') { event.preventDefault(); highlight(active - 1); }
+      else if (event.key === 'Enter') { const target = options()[active]; if (target) { event.preventDefault(); window.location.href = target.href; } }
+    });
+    dialog.querySelector('.search-close')?.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
+    dialog.addEventListener('close', () => trigger.focus());
+    document.addEventListener('keydown', event => {
+      const typing = event.target instanceof HTMLElement && (event.target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(event.target.tagName));
+      if ((event.key.toLowerCase() === 'k' && (event.metaKey || event.ctrlKey)) || (event.key === '/' && !typing)) { event.preventDefault(); open(); }
+    });
+  }
+</script>

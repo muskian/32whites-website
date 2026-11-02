@@ -1,0 +1,24 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/Icon.astro';
+import ClinicalReview from '../../components/ClinicalReview.astro';
+import {symptoms} from '../../data/symptoms';
+import {treatments} from '../../data/treatments';
+import {guides} from '../../data/guides';
+import {clinic, whatsappBookingUrl} from '../../data/clinic';
+export function getStaticPaths() {return symptoms.map(symptom => ({params:{slug:symptom.slug},props:{symptom}}));}
+const {symptom: s} = Astro.props;
+const decisionGuides = s.guides.map(slug => guides.find(item => item.slug === slug)).filter(Boolean);
+const reviewPath = `/symptoms/${s.slug}/`;
+const bookingUrl = whatsappBookingUrl(reviewPath);
+const symptomTitles: Record<string, string> = {
+  'tooth-pain-keshavnagar': 'Tooth Pain: When to See a Dentist | 32 Whites, Keshavnagar',
+  'swollen-gums-pune': 'Swollen or Bleeding Gums: Next Steps | 32 Whites, Pune',
+  'sensitive-teeth-pune': 'Sensitive Teeth: What to Ask Your Dentist | 32 Whites, Pune',
+  'broken-tooth-pune': 'Chipped or Broken Tooth: Getting Help | 32 Whites, Pune',
+  'dental-anxiety-pune': 'Nervous About the Dentist? Plan Your Visit | 32 Whites, Pune',
+};
+---
+<Layout title={symptomTitles[s.slug]} description={`Learn about ${s.name.toLowerCase()}, when to seek help and questions to ask your dentist. Arrange an assessment at 32 Whites in Keshavnagar, Pune.`} breadcrumbs={[{name:'Dental concerns',path:'/concerns/'},{name:s.name,path:`/symptoms/${s.slug}/`}]} pageType="MedicalWebPage">
+  <div class="container"><section class="page-hero"><span class="eyebrow">Start with an assessment</span><h1>{s.name}?</h1><p class="treatment-promise">{s.headline}</p><p>{s.intro}</p><div class="actions"><a class="button button-dark" href={`tel:${clinic.phone}`} data-track="call_click"><Icon name="phone" size={18}/>Call the clinic</a><a class="button button-outline" href={bookingUrl} target="_blank" rel="noopener noreferrer" data-track="whatsapp_booking_click"><Icon name="chat" size={18}/>Book on WhatsApp</a></div></section><div class="content-grid"><article class="article-content"><ClinicalReview path={reviewPath}/><section><h2>What to do next</h2><p>{s.next}</p></section><section class="notice notice-urgent"><h2 class="notice-title"><Icon name="alert" size={20}/>When to seek emergency medical help</h2><p>If you have difficulty breathing or swallowing, serious facial injury, uncontrolled bleeding or rapidly worsening swelling, seek emergency medical help. Do not wait for a website callback.</p></section><section><h2>Tell the dentist what you’ve noticed</h2><ul>{s.questions.map(question => <li>{question}</li>)}</ul></section><section><h2>Related treatment information</h2><p>The appropriate treatment depends on the findings. These pages explain possible approaches, rather than diagnosing your symptoms.</p><nav class="chip-links" aria-label="Related treatments">{s.related.map(slug => <a href={`/services/${slug}/`}>{treatments.find(t => t.slug === slug)!.name}<Icon name="arrow" size={14}/></a>)}</nav></section><section><h2>Guides for the next decision</h2><div class="context-links">{decisionGuides.map(item => item && <a href={`/blog/${item.slug}/`}><span>Patient guide</span><strong>{item.title}</strong><small>{item.description}</small></a>)}</div></section><p class="editorial-note">General information, not an individual diagnosis. Further reading: <a href={s.source.url} target="_blank" rel="noopener noreferrer">{s.source.label}</a>.</p></article><aside class="content-aside" aria-labelledby="aside-heading"><h2 id="aside-heading">Talk to the clinic</h2><p>{clinic.hours}<br/>{clinic.sunday}</p><div class="aside-cta"><a class="button button-dark button-block" href={`tel:${clinic.phone}`} data-track="call_click"><Icon name="phone" size={18}/>Call {clinic.phoneDisplay}</a><a class="button button-outline button-block" href={bookingUrl} target="_blank" rel="noopener noreferrer" data-track="whatsapp_booking_click"><Icon name="chat" size={18}/>Book on WhatsApp</a></div></aside></div></div>
+</Layout>

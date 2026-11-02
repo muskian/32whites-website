@@ -1,0 +1,27 @@
+---
+interface Props { variant?: string; id: string; class?: string }
+const {variant = 'tooth', id, class: className = ''} = Astro.props;
+const gradient = `visual-${id}`;
+---
+<svg class={`treatment-visual ${className}`} viewBox="0 0 360 280" fill="none" aria-hidden="true">
+  <defs><linearGradient id={gradient} x1="95" y1="55" x2="252" y2="220" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset=".5" stop-color="#fff7fa"/><stop offset="1" stop-color="#b9dceb"/></linearGradient></defs>
+  <circle cx="180" cy="140" r="105" stroke="currentColor" stroke-opacity=".15"/><circle cx="180" cy="140" r="82" stroke="currentColor" stroke-opacity=".1"/><ellipse cx="180" cy="241" rx="76" ry="9" fill="#315f7d" opacity=".12"/>
+  {variant === 'implant' ? <>
+    <path d="M154 119h52v92l-26 23-26-23v-92Z" fill="#91bdd1" stroke="#4e7890" stroke-width="2"/>
+    {[139,155,171,187,203].map(y => <path d={`M146 ${y}l68 8`} stroke="#e5f4fa" stroke-width="7" stroke-linecap="round"/>)}
+    <path d="M136 65c14-14 74-14 88 0l12 51c-19 18-93 18-112 0l12-51Z" fill={`url(#${gradient})`} stroke="#93b8c9" stroke-width="2"/><path d="M146 75c15-6 30-6 45-4" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+  </> : variant === 'align' || variant === 'crown' || variant === 'denture' ? <>
+    {variant === 'denture' && <path d="M82 114c42-43 154-43 196 0l-4 71c-51 49-137 49-188 0l-4-71Z" fill="#f2b9cb" stroke="#c8718b" stroke-width="2"/>}
+    <path d="M91 120c44-30 134-30 178 0v54c-46 37-132 37-178 0v-54Z" fill={`url(#${gradient})`} stroke="#93b8c9" stroke-width="2"/>
+    {[116,148,180,212,244].map(x => <path d={`M${x} 111v79`} stroke="#9fc4d6" stroke-width="2"/>)}
+    {variant === 'align' ? <><path d="M91 149c51 19 127 19 178 0" stroke="#4f7890" stroke-width="4"/>{[110,142,174,206,238].map(x => <rect x={x} y="140" width="13" height="18" rx="3" fill="#e5f4fa" stroke="#4f7890" stroke-width="2"/>)}</> : variant === 'crown' && <path d="M165 111c9-4 21-4 30 0v86c-10 2-20 2-30 0v-86Z" fill="#f0b7c9" stroke="#bd6e87" stroke-width="2"/>}
+  </> : <>
+    <path d="M180 69c-35-23-72-18-76 19-5 35 18 64 25 91 6 29 8 54 23 54 13 0 11-48 28-48s16 48 28 48c16 0 18-25 24-54 7-28 30-56 25-91-5-37-42-42-77-19Z" fill={`url(#${gradient})`} stroke="#93b8c9" stroke-width="2"/>
+    <path d="M121 90c-3 18 2 32 7 45M180 69c10 9 24 12 36 9" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+    {variant === 'tooth' && <path d="M180 111v47m0-4-20 43m20-43 20 43" stroke="#c8718b" stroke-width="5" stroke-linecap="round"/>}
+    {variant === 'gum' && <path d="M113 161c41-16 93-16 134 0l-11 34c-34-9-78-9-111 0l-12-34Z" fill="#f2b9cb" stroke="#c8718b" stroke-width="2"/>}
+    {variant === 'child' && <><circle cx="160" cy="126" r="4" fill="#4f7890"/><circle cx="200" cy="126" r="4" fill="#4f7890"/><path d="M166 143q14 16 28 0" stroke="#4f7890" stroke-width="3" stroke-linecap="round"/></>}
+  </>}
+  {(variant === 'smile' || variant === 'clean') && <path d="m262 61 5 15 15 5-15 5-5 15-5-15-15-5 15-5 5-15ZM98 190l4 10 10 4-10 4-4 10-4-10-10-4 10-4 4-10Z" fill="#d47d9c"/>}
+  <circle cx="75" cy="83" r="5" fill="currentColor" opacity=".2"/><circle cx="280" cy="206" r="7" fill="currentColor" opacity=".15"/>
+</svg>

@@ -1,0 +1,16 @@
+---
+import Layout from '../layouts/Layout.astro';
+import {clinic, formsEnabled} from '../data/clinic';
+---
+<Layout title="Website & Appointment Privacy | 32 Whites" description="How 32 Whites website search, WhatsApp links and appointment requests work, what information is involved and how to contact the clinic." breadcrumbs={[{name:'Privacy notice',path:'/privacy/'}]}>
+  <div class="container">
+    <section class="page-hero"><span class="eyebrow">Your information</span><h1>Website & appointment<br/>privacy notice.</h1><p>Use the clinic phone or WhatsApp to ask about an appointment. Please avoid sending medical records or detailed medical history through a website enquiry.</p></section>
+    <div class="content-grid"><article class="article-content">
+      <section><h2>Website search and measurement</h2><p>Site search runs in your browser. Search terms are not sent to a search service or recorded by the website's measurement hooks. This build does not load Google Analytics, Google Tag Manager, advertising tags or session recording.</p><p>The website prepares limited interaction events, such as a call or WhatsApp click, for a future approved measurement setup. These events contain only the interaction type and a fixed website source label. They do not contain page addresses, treatment names, form entries or WhatsApp messages. A click does not confirm an enquiry or appointment.</p></section>
+      <section><h2>When you open WhatsApp, call or directions</h2><p>WhatsApp opens a draft addressed to the clinic. The draft includes the website page you came from so the team has context. You can edit it before choosing to send. Opening the draft does not send a message or register you as a patient.</p><p>Telephone, WhatsApp and Google Maps links open services outside this website. Those services handle information under their own policies. Their tracking widgets are not embedded here. The clinic confirms appointment availability after you contact the team.</p></section>
+      <section><h2>Online callback requests</h2><p>The optional callback form asks for a name, phone number and consent to be contacted about the request. It does not ask for medical history or payment information.</p>{formsEnabled ? <p>When you submit the form, these details are sent through Netlify Forms for the clinic to respond about availability. A request does not reserve an appointment.</p> : <p>Online callback submission is currently disabled. Use the clinic phone or WhatsApp instead.</p>}</section>
+      <section><h2>Questions about your information</h2><p>Call <a href={`tel:${clinic.phone}`} data-track="call_click">{clinic.phoneDisplay}</a> if you have a question about your enquiry or want to request correction or deletion of contact details. The clinic may need to retain records it is required to keep.</p></section>
+      <section><h2>Before additional online services are activated</h2><p>The clinic must confirm authorized staff access, retention, request handling and the final notice for any receiving or analytics service. No specific retention period is claimed here while those arrangements are pending.</p></section>
+    </article></div>
+  </div>
+</Layout>

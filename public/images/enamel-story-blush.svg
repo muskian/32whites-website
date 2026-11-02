@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="640" viewBox="0 0 600 640" fill="none">
+<!-- Original decorative enamel sculpture. No patient or treatment outcome depicted. -->
+<defs>
+ <linearGradient id="edge" x1="130" y1="98" x2="460" y2="520" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset=".25" stop-color="#eddae3"/><stop offset=".53" stop-color="#eddae3"/><stop offset=".76" stop-color="#edc5d3"/><stop offset="1" stop-color="#eddae3"/></linearGradient>
+ <linearGradient id="face" x1="180" y1="80" x2="428" y2="500" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset=".34" stop-color="#fffdfd"/><stop offset=".62" stop-color="#eddae3"/><stop offset=".8" stop-color="#f8e6ec"/><stop offset="1" stop-color="#eddae3"/></linearGradient>
+ <radialGradient id="crown" cx="0" cy="0" r="1" gradientTransform="translate(256 149) rotate(52) scale(204 142)" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset=".55" stop-color="#f6f6f6"/><stop offset="1" stop-color="#eddae3"/></radialGradient>
+ <radialGradient id="shadow"><stop stop-color="#eddae3" stop-opacity=".2"/><stop offset="1" stop-color="#eddae3" stop-opacity="0"/></radialGradient>
+</defs>
+<ellipse cx="312" cy="573" rx="210" ry="30" fill="url(#shadow)"/>
+<path d="M297 105c-47-34-111-37-141 2-44 56-6 116 13 157 23 47 20 123 46 186 11 28 35 34 49 5 17-38 18-116 43-120 28-5 36 87 61 124 17 24 40 8 48-18 16-56 16-117 37-171 17-43 49-107 19-151-31-47-98-46-141-18-11 7-21 9-34 4Z" transform="translate(21 8)" fill="url(#edge)"/>
+<path d="M297 105c-47-34-111-37-141 2-44 56-6 116 13 157 23 47 20 123 46 186 11 28 35 34 49 5 17-38 18-116 43-120 28-5 36 87 61 124 17 24 40 8 48-18 16-56 16-117 37-171 17-43 49-107 19-151-31-47-98-46-141-18-11 7-21 9-34 4Z" fill="url(#face)" stroke="#fff" stroke-opacity=".85" stroke-width="2"/>
+<path d="M163 126c28-34 70-27 99-10 23 13 35 24 55 18 28-9 64-39 106-20 26 12 36 42 23 70-16 31-46 30-71 16-27-16-42-17-65-2-27 17-35 20-64 6-33-16-63 3-83-24-12-16-13-36 0-54Z" fill="url(#crown)"/>
+<path d="M177 126c20-13 47-12 65-5" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
+<path d="M153 184c9 37 31 70 40 111 10 53 9 95 26 136" stroke="#fff" stroke-opacity=".88" stroke-width="10" stroke-linecap="round"/>
+<path d="M296 119c22 25 38 27 67 12m-115 72c24-11 36-25 48-44m15 39c10-16 25-25 46-25" stroke="#eddae3" stroke-opacity=".46" stroke-width="3" stroke-linecap="round"/>
+<path d="M307 335c-4-40 0-72 10-97" stroke="#eddae3" stroke-opacity=".25" stroke-width="7" stroke-linecap="round"/>
+</svg>

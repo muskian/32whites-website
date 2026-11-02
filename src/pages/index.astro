@@ -1,0 +1,113 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import Faq from '../components/Faq.astro';
+import ReviewCards from '../components/ReviewCards.astro';
+import TreatmentCard from '../components/TreatmentCard.astro';
+import {clinic, whatsappBookingUrl} from '../data/clinic';
+import {doctor, reviewSnapshot} from '../data/evidence';
+import {concerns} from '../data/discovery';
+import {treatments} from '../data/treatments';
+import {guides} from '../data/guides';
+const priority = ['root-canal-treatment', 'dental-implants', 'braces-aligners', 'kids-dentistry'];
+const featuredGuideSlugs = ['root-canal-or-extraction','implant-bridge-or-denture','planning-your-first-dental-visit'];
+const featuredGuides = featuredGuideSlugs.map(slug => guides.find(guide => guide.slug === slug)).filter(Boolean);
+const bookingUrl = whatsappBookingUrl('/');
+const faqs: [string, string][] = [
+  ['How do I book an appointment?', `Call ${clinic.phoneDisplay} or message the same number on WhatsApp with your preferred day and time. The clinic will confirm availability and the consultation fee. A message or callback request does not reserve a slot.`],
+  ['Where is 32 Whites, and can I park?', `${clinic.address}. Parking is available. Access involves stairs; if stairs are difficult for you, call before travelling to discuss access. The visit page has the entrance photo and Google Maps directions.`],
+  ['Are you open on Sunday?', `Yes. ${clinic.sunday}. Our other hours are ${clinic.hours}. Please confirm appointment availability before travelling; holiday hours may differ.`],
+  ['What will my treatment cost?', 'The examination, procedure, materials and follow-up needs determine your estimate. Ask about the consultation fee when booking, then request an itemised treatment estimate before proceeding.'],
+  ['Can I speak in Hindi or Marathi?', 'Yes. The clinic can communicate in English, Hindi and Marathi. Mention the language you prefer when arranging your visit.'],
+];
+---
+<Layout title="Dentist in Keshavnagar, Pune | 32 Whites Dental Clinic" description="Tooth pain, missing teeth or a smile you want to change? Meet Dr. Bhakti, BDS, at 32 Whites in Keshavnagar. See Google reviews and call or WhatsApp to book.">
+  <div class="hero-shell">
+    <section class="container patient-hero" aria-labelledby="hero-heading">
+      <div class="patient-hero-copy">
+        <span class="eyebrow">Your dentist in Keshavnagar, Pune</span>
+        <h1 id="hero-heading">For the tooth that hurts.<br/><span>And the smile you want.</span></h1>
+        <p class="hero-description">32 Whites is a dental clinic in Keshavnagar, Pune, with <a href={doctor.profile}>Dr. Bhakti Ghanwat Gavade, BDS</a>. Whether you have tooth pain, a missing tooth or a check-up in mind, start with a visit to understand your options and ask about costs before choosing treatment.</p>
+        <div class="hero-actions">
+          <a class="button button-dark" href={bookingUrl} target="_blank" rel="noopener noreferrer" data-track="whatsapp_booking_click"><Icon name="chat" size={18}/>Book on WhatsApp</a>
+          <a class="button button-outline" href={`tel:${clinic.phone}`} data-track="call_click"><Icon name="phone" size={18}/>Call the clinic</a>
+        </div>
+        <p class="hero-booking-note">WhatsApp opens a draft request. Send it and wait for the clinic to confirm your appointment.</p>
+        <div class="hero-proof">
+          <a class="proof-item proof-rating" href={reviewSnapshot.source} target="_blank" rel="noopener noreferrer"><span class="proof-score">{reviewSnapshot.rating}</span><span><strong><span class="stars" aria-hidden="true">★★★★★</span> {reviewSnapshot.count} Google reviews</strong>Checked {reviewSnapshot.checked}</span></a>
+          <div class="proof-item"><Icon name="shield" size={22}/><span><strong>BDS · Government Dental College & Hospital, Mumbai</strong>Maharashtra dental registration {doctor.registration}</span></div>
+        </div>
+      </div>
+      <div class="hero-image-column">
+        <figure class="patient-hero-photo">
+          <div class="welcome-art">
+            <div class="welcome-vignette"><img src="/images/welcome-team-720.webp" srcset="/images/welcome-team-360.webp 360w, /images/welcome-team-720.webp 720w" sizes="(max-width:767px) 43vw, 24vw" width="1536" height="1024" loading="eager" alt="Illustration of a dental team warmly welcoming arriving patients"/><span>01 · A warm welcome</span></div>
+            <div class="welcome-vignette"><img src="/images/welcome-family-chair-720.webp" srcset="/images/welcome-family-chair-360.webp 360w, /images/welcome-family-chair-720.webp 720w" sizes="(max-width:767px) 43vw, 24vw" width="1536" height="1024" loading="eager" alt="Illustration of a child seated in a dental chair, surrounded by a caring dentist and both parents"/><span>02 · Smiles, together</span></div>
+            <span>Illustrated scenes, not staff portraits or actual patients.</span>
+          </div>
+          <figcaption>
+            <span class="eyebrow">A conversation is a good place to start</span>
+            <strong>Your next visit starts here</strong>
+            <p>Bring your questions. Tell us what matters to you.</p>
+            <ol class="welcome-steps">
+              <li><span>01</span><div><b>Share what’s on your mind</b><p>A concern, a check-up or a change you’re considering.</p></div></li>
+              <li><span>02</span><div><b>Talk through your options</b><p>Ask about the choices and costs before deciding.</p></div></li>
+              <li><span>03</span><div><b>Plan your visit</b><p>Call or WhatsApp the team to confirm a time.</p></div></li>
+            </ol>
+            <div class="welcome-location"><span>Arc Pukhraj · Opposite Renuka Mata Mandir</span><a href="/contact/" aria-label="Directions and access details"><Icon name="arrow" size={18}/></a></div>
+          </figcaption>
+        </figure>
+        <a class="hero-visit-link" href="/contact/#access"><span>Parking available · Access involves stairs</span><span>Plan your arrival<Icon name="arrow" size={16}/></span></a>
+      </div>
+    </section>
+  </div>
+  <div class="practical-band"><div class="container practical-strip"><span><Icon name="clock" size={22}/><span><strong>Evening & Sunday hours</strong><span class="nowrap">{clinic.hours}</span> · <span class="nowrap">{clinic.sunday}</span></span></span><span><Icon name="language" size={22}/><span><strong>Speak comfortably</strong>English · Hindi · Marathi</span></span><span><Icon name="pin" size={22}/><span><strong>Here in your neighbourhood</strong>Keshavnagar · Mundhwa · Pune</span></span></div></div>
+
+  <section class="section container" aria-labelledby="concern-heading">
+    <div class="section-heading"><div><span class="eyebrow">Start with what you’ve noticed</span><h2 id="concern-heading">What would you like help with?</h2></div><p>You don’t need a diagnosis to book. Pick what sounds like you and find your next step.</p></div>
+    <div class="concern-grid">{concerns.map(concern => <a class="concern-card" href={concern.href}><span class="concern-icon"><Icon name={concern.icon} size={22}/></span><div><h3>{concern.title}</h3><p>{concern.detail}</p></div><Icon name="diagonal" size={18}/></a>)}</div>
+    <div class="concern-foot"><a class="text-link" href="/concerns/">Broken tooth, sensitivity or dental anxiety<Icon name="arrow" size={16}/></a><a class="urgent-link" href="/services/emergency-dental/"><Icon name="alert" size={16}/>Pain or swelling? When to get urgent help</a></div>
+  </section>
+
+  <section class="treatment-band" aria-labelledby="services-heading"><div class="container section">
+    <div class="section-heading"><div><span class="eyebrow">From everyday care to a bigger change</span><h2 id="services-heading">A treatment has a name.<br/>Your need comes first.</h2></div><a class="text-link" href="/services/">See all treatments<Icon name="arrow" size={16}/></a></div>
+    <div class="priority-grid">{priority.map(slug => <TreatmentCard treatment={treatments.find(t => t.slug === slug)!} id="home"/>)}</div>
+    <div class="treatment-more"><span>Looking for something else?</span><nav class="chip-links chip-links-dark" aria-label="More treatments">{treatments.filter(t => !priority.includes(t.slug)).map(t => <a href={`/services/${t.slug}/`}>{t.name}</a>)}</nav></div>
+  </div></section>
+
+  <section class="section container clinician-grid" aria-labelledby="doctor-heading">
+    <div><span class="eyebrow">A name behind your care</span><h2 id="doctor-heading">Meet Dr. Bhakti.<br/><span class="soft-text">Know who you’re seeing.</span></h2><p>You’re choosing a dentist as well as a treatment. Bring the tooth that’s troubling you, the smile change you’re considering or the questions you’ve been putting off.</p><a class="button button-dark" href={doctor.profile}>Meet your dentist<Icon name="arrow" size={18}/></a></div>
+    <div class="credential-card"><div class="credential-seal"><img src="/images/logo.png" width="48" height="48" alt=""/><span>Your dentist<br/><strong>32 Whites, Keshavnagar</strong></span></div><h3>{doctor.name}</h3><p class="credential-degree">Bachelor of Dental Surgery · BDS</p><dl><div><dt>Dental education</dt><dd>{doctor.college}</dd></div><div><dt>Professional registration</dt><dd>{doctor.council} · <strong>{doctor.registration}</strong></dd></div></dl><a class="text-link" href="/blog/planning-your-first-dental-visit/">What to bring to your first visit<Icon name="arrow" size={16}/></a></div>
+  </section>
+
+  <section class="reviews-band" aria-labelledby="reviews-heading"><div class="container section">
+    <div class="section-heading"><div><span class="eyebrow">Original Google reviews</span><h2 id="reviews-heading">Before your first visit,<br/>hear from patients.</h2></div><div class="rating-summary"><strong>{reviewSnapshot.rating}<span class="stars" aria-hidden="true">★★★★★</span></strong><a class="text-link" href={reviewSnapshot.source} target="_blank" rel="noopener noreferrer">{reviewSnapshot.count} reviews on Google<Icon name="diagonal" size={16}/></a></div></div>
+    <ReviewCards excerpts/>
+    <div class="review-source-note"><p>Selected public review excerpts. Rating and count checked {reviewSnapshot.checked}; both can change. Each person’s experience is individual.</p><a class="text-link" href="/reviews/">Explore the review sources<Icon name="arrow" size={16}/></a></div>
+  </div></section>
+
+  <section class="section container evidence-feature" aria-labelledby="updates-heading">
+    <div><span class="eyebrow">A glimpse into the clinic</span><h2 id="updates-heading">The work behind<br/>the appointment.</h2><p>A previously treated tooth. A front-tooth gap. Instrument preparation. Read the clinic’s own published updates and take a closer look at the decisions behind dental care.</p><a class="button button-outline" href="/our-work/">Explore clinic updates<Icon name="arrow" size={18}/></a></div>
+    <div class="evidence-list"><a href="/our-work/#root-canal-treatment"><span>01 · Repeat root canal case</span><h3>Can a previously treated tooth be reassessed?</h3><Icon name="arrow" size={20}/></a><a href="/our-work/#smile-makeover"><span>02 · Composite bonding</span><h3>A closer look at a front-tooth gap</h3><Icon name="arrow" size={20}/></a><a href="/our-work/#sterilisation"><span>03 · Behind the scenes</span><h3>Instrument sterilisation at the clinic</h3><Icon name="arrow" size={20}/></a></div>
+  </section>
+
+  <section class="container visit-panel" aria-labelledby="visit-heading">
+    <div><span class="eyebrow">Fit your visit into your day</span><h2 id="visit-heading">Close to home.<br/>Easy to plan.</h2><address>{clinic.address}</address><div class="hero-actions"><a class="button button-white" href={clinic.maps} target="_blank" rel="noopener noreferrer" data-track="directions_click"><Icon name="pin" size={18}/>Get directions</a><a class="text-link" href="/contact/">Hours & booking<Icon name="arrow" size={16}/></a></div></div>
+    <div class="visit-details"><div><span>01</span><div><h3>Pick a day that works</h3><p>Monday–Saturday, 10am–9pm. Sunday, 11am–5pm. Call or WhatsApp to confirm a time.</p></div></div><div><span>02</span><div><h3>Bring the essentials</h3><p>Your medicine list, previous dental records and anything you want to ask.</p></div></div><div><span>03</span><div><h3>Know the entrance</h3><p>Parking is available; access involves stairs. Call before travelling if you need help with access.</p></div></div></div>
+  </section>
+
+  <section class="section container faq-grid" aria-labelledby="faq-heading">
+    <div><span class="eyebrow">Useful answers, before you book</span><h2 id="faq-heading">Less guesswork.<br/>A better prepared visit.</h2><p>Practical answers about booking, getting here and costs.</p><a class="text-link" href="/pricing/">Know what to ask about costs<Icon name="arrow" size={16}/></a></div>
+    <Faq items={faqs}/>
+  </section>
+
+  <section class="section-sm container" aria-labelledby="guides-heading">
+    <div class="section-heading"><div><span class="eyebrow">For decisions that take a little thought</span><h2 id="guides-heading">A few minutes of reading.<br/>Questions worth bringing.</h2></div><a class="text-link" href="/blog/">All patient guides<Icon name="arrow" size={16}/></a></div>
+    <div class="guide-grid guide-grid-tinted">{featuredGuides.map(guide => guide && <article class="guide-card"><span class="eyebrow">{guide.category}</span><h3><a href={`/blog/${guide.slug}/`}>{guide.title}</a></h3><p>{guide.description}</p><span class="text-link" aria-hidden="true">Read this guide<Icon name="arrow" size={16}/></span></article>)}</div>
+  </section>
+
+  <section class="container final-cta" aria-labelledby="final-cta-heading">
+    <div><span class="eyebrow">Let’s make your next visit happen</span><h2 id="final-cta-heading">A check-up. A concern.<br/>A smile you have in mind.</h2><p>Tell the team what brings you here. We’ll start by arranging a visit.</p></div>
+    <div class="cta-stack"><a class="button button-dark" href={bookingUrl} target="_blank" rel="noopener noreferrer" data-track="whatsapp_booking_click"><Icon name="chat" size={18}/>Book on WhatsApp</a><a class="button button-outline" href={`tel:${clinic.phone}`} data-track="call_click"><Icon name="phone" size={18}/>Call {clinic.phoneDisplay}</a></div>
+  </section>
+</Layout>

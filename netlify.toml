@@ -1,0 +1,18 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "24.22.1"
+
+# Unset production flags default to false in src/data/clinic.ts.
+# Set production-only flags in the hosting UI only after the launch gates pass.
+# File-level defaults here would override those UI values.
+
+[context.deploy-preview.environment]
+  PUBLIC_SITE_INDEXABLE = "false"
+  PUBLIC_FORMS_ENABLED = "false"
+
+[context.branch-deploy.environment]
+  PUBLIC_SITE_INDEXABLE = "false"
+  PUBLIC_FORMS_ENABLED = "false"

@@ -1,0 +1,26 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import TreatmentRow from '../../components/TreatmentRow.astro';
+import BookingBanner from '../../components/BookingBanner.astro';
+import Icon from '../../components/Icon.astro';
+import {treatments} from '../../data/treatments';
+import {whatsappBookingUrl} from '../../data/clinic';
+const bookingUrl = whatsappBookingUrl('/services/');
+const groups = [
+  {id: 'prevent', category: 'Prevent', label: 'Everyday care', heading: 'Look after your everyday dental health', intro: 'Check-ups, cleaning, gum care and children’s visits.'},
+  {id: 'restore', category: 'Restore', label: 'Repair & replace', heading: 'Repair damage. Explore tooth replacement.', intro: 'Saving a tooth, protecting it, or replacing one that is missing.'},
+  {id: 'align', category: 'Align', label: 'Alignment', heading: 'Plan a change to tooth alignment', intro: 'Braces and clear aligners for crowding, gaps and bite concerns.'},
+  {id: 'smile', category: 'Smile', label: 'Smile changes', heading: 'Make a considered change to your smile', intro: 'Whitening and smile planning for colour, shape and gaps.'},
+  {id: 'urgent', category: 'Urgent', label: 'Urgent care', heading: 'When your teeth need attention sooner', intro: 'Pain, swelling or an injury. Call the clinic during opening hours.'},
+  {id: 'plan', category: 'Plan', label: 'Technique & planning', heading: 'A technique should fit the treatment', intro: 'Techniques discussed as part of a wider treatment plan.'},
+].map(group => ({...group, items: treatments.filter(t => t.category === group.category)})).filter(group => group.items.length);
+---
+<Layout title="Dental Treatments in Keshavnagar | 32 Whites" description="Explore check-ups, root canal treatment, implants, braces, children’s dentistry and more at 32 Whites in Keshavnagar. Compare options and plan a visit." breadcrumbs={[{name:'Treatments',path:'/services/'}]}>
+  <div class="container">
+    <section class="page-hero page-hero-wide"><span class="eyebrow">Dental treatments · Keshavnagar, Pune</span><h1>Keep your teeth healthy.<br/><span class="soft-text">Find care for what’s changed.</span></h1><p>From routine check-ups to a missing tooth or a smile change: start with the need, then explore the treatment. Each guide covers the process, alternatives, aftercare and cost factors so you can prepare for an assessment.</p><div class="actions"><a class="button button-dark" href={bookingUrl} target="_blank" rel="noopener noreferrer" data-track="whatsapp_booking_click"><Icon name="chat" size={18}/>Book on WhatsApp</a><a class="text-link" href="/concerns/">Not sure what you need? Start with your concern<Icon name="arrow" size={16}/></a></div>
+      <nav class="filter-links" aria-label="Treatment groups">{groups.map(group => <a href={`#${group.id}`}>{group.label}</a>)}</nav>
+    </section>
+    <div class="service-groups">{groups.map(group => <section class="service-group" id={group.id} aria-labelledby={`${group.id}-heading`}><div class="service-group-intro"><span class="eyebrow">{group.label}</span><h2 id={`${group.id}-heading`}>{group.heading}</h2><p>{group.intro}</p></div><div class="service-rows">{group.items.map(t => <TreatmentRow treatment={t}/>)}</div></section>)}</div>
+  </div>
+  <BookingBanner/>
+</Layout>

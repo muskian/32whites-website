@@ -1,0 +1,43 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+import BookingBanner from '../../components/BookingBanner.astro';
+import Icon from '../../components/Icon.astro';
+import TreatmentVisual from '../../components/TreatmentVisual.astro';
+import ClinicalReview from '../../components/ClinicalReview.astro';
+import {patientCopy, treatmentDescriptions} from '../../data/patient-copy';
+import {treatments, type Treatment} from '../../data/treatments';
+import {symptoms} from '../../data/symptoms';
+import {guides} from '../../data/guides';
+import {treatmentJourneys} from '../../data/journeys';
+import {clinic, organizationId, whatsappBookingUrl} from '../../data/clinic';
+import {doctor, clinicalUpdates} from '../../data/evidence';
+export function getStaticPaths() { return treatments.map(treatment => ({params: {slug: treatment.slug}, props: {treatment}})); }
+interface Props {treatment: Treatment}
+const {treatment: t} = Astro.props;
+const copy = patientCopy[t.slug];
+const updates = clinicalUpdates.filter(item => item.treatment === t.slug);
+const journey = treatmentJourneys[t.slug] ?? {concerns:[], guides:[]};
+const relatedConcerns = journey.concerns.map(slug => symptoms.find(item => item.slug === slug)).filter(Boolean);
+const decisionGuides = journey.guides.map(slug => guides.find(item => item.slug === slug)).filter(Boolean);
+const reviewPath = `/services/${t.slug}/`;
+const bookingUrl = whatsappBookingUrl(reviewPath);
+const schema = [{'@type': 'Service', '@id': `${clinic.url}/services/${t.slug}/#service`, name: t.name, serviceType: t.name, provider: {'@id': organizationId}, areaServed: {'@type':'Place', name:'Keshavnagar, Pune'}, url: `${clinic.url}/services/${t.slug}/`}];
+---
+<Layout title={`${t.name} in Keshavnagar | 32 Whites`} description={treatmentDescriptions[t.slug]} breadcrumbs={[{name:'Treatments',path:'/services/'},{name:t.name,path:`/services/${t.slug}/`}]} schema={schema} pageType="MedicalWebPage" mainEntity={`${clinic.url}/services/${t.slug}/#service`}>
+  <div class="container"><section class="treatment-hero"><div><span class="eyebrow">{copy.focus} · Keshavnagar, Pune</span><h1>{t.name} in Keshavnagar</h1><p class="treatment-promise">{copy.headline}</p><p class="hero-description">{copy.lead}</p><div class="actions"><a class="button button-dark" href={t.slug === 'emergency-dental' ? `tel:${clinic.phone}` : bookingUrl} target={t.slug === 'emergency-dental' ? undefined : '_blank'} rel={t.slug === 'emergency-dental' ? undefined : 'noopener noreferrer'} data-track={t.slug === 'emergency-dental' ? 'call_click' : 'whatsapp_booking_click'}><Icon name={t.slug === 'emergency-dental' ? 'phone' : 'chat'} size={18}/>{copy.action}</a></div><p class="hero-booking-note"><Icon name="shield" size={16}/>At 32 Whites with <a class="text-link" href={doctor.profile}>Dr. Bhakti, BDS</a></p></div><div class="treatment-hero-art"><TreatmentVisual variant={copy.variant} id={`hero-${t.slug}`}/><ul>{copy.facts.map(fact => <li><Icon name="check" size={18}/>{fact}</li>)}</ul></div></section>
+  <div class="content-grid"><article class="article-content">
+    <ClinicalReview path={reviewPath}/>
+    <section><h2>What the treatment does</h2><p>{t.intro}</p></section>
+    <section id="suitability"><h2>Could this be right for you?</h2><ul>{t.suitability.map(item => <li>{item}</li>)}</ul><p>Your examination comes first. The findings determine whether this approach fits your teeth, health and goals.</p></section>
+    <section id="process"><h2>From assessment to aftercare</h2><div class="step-list">{t.steps.map(([title, text], i) => <div class="step"><span>{String(i + 1).padStart(2, '0')}</span><div><h3>{title}</h3><p>{text}</p></div></div>)}</div></section>
+    <section id="considerations"><h2>Risks, limitations & alternatives</h2><p>{t.considerations}</p></section>
+    <section id="aftercare"><h2>Aftercare & follow-up</h2><p>{t.aftercare}</p></section>
+    <section id="cost"><h2>Plan the cost before you commit</h2><p>{t.cost}</p><p>Confirm the consultation fee when booking. Before treatment, request a breakdown of the procedure, materials and follow-up so you can compare the complete plan.</p><a class="text-link" href="/pricing/">Your treatment estimate checklist<Icon name="arrow" size={16}/></a></section>
+    <section id="questions"><h2>Questions you may have</h2><Faq items={t.faqs}/></section>
+    {updates.length > 0 && <section><h2>A published clinic update</h2>{updates.map(update => <p><a href={update.source} target="_blank" rel="noopener noreferrer">{update.title}, original Google post<Icon name="diagonal" size={14}/></a>. Published {update.date}. A case reflects one patient’s circumstances; your treatment needs an individual assessment.</p>)}</section>}
+    <section><h2>Related options</h2><nav class="chip-links" aria-label="Related treatments">{t.related.map(slug => <a href={`/services/${slug}/`}>{treatments.find(item => item.slug === slug)!.name}<Icon name="arrow" size={14}/></a>)}</nav></section>
+    {(relatedConcerns.length > 0 || decisionGuides.length > 0) && <section><h2>Continue from your question</h2><p>Use the page that matches what you are deciding or noticing. These links provide context for a clinical conversation; they do not determine which treatment you need.</p><div class="context-links">{relatedConcerns.map(item => item && <a href={`/symptoms/${item.slug}/`}><span>Concern</span><strong>{item.name}</strong><small>{item.headline}</small></a>)}{decisionGuides.map(item => item && <a href={`/blog/${item.slug}/`}><span>Decision guide</span><strong>{item.title}</strong><small>{item.description}</small></a>)}</div></section>}
+    <p class="editorial-note">General patient information, not an individual diagnosis or treatment recommendation. Further reading: <a href={t.source.url} target="_blank" rel="noopener noreferrer">{t.source.label}</a>. Confirm procedure availability and your individual plan with the clinic.</p>
+  </article><aside class="content-aside" aria-labelledby="toc-heading"><h2 id="toc-heading">On this page</h2><nav class="toc" data-toc aria-labelledby="toc-heading"><a href="#suitability">Is it suitable for me?</a><a href="#process">Steps and appointments</a><a href="#considerations">Risks & alternatives</a><a href="#aftercare">Care after treatment</a><a href="#cost">What affects the cost?</a><a href="#questions">Common questions</a></nav><div class="aside-cta"><a class="button button-dark button-block" href={bookingUrl} target="_blank" rel="noopener noreferrer" data-track="whatsapp_booking_click"><Icon name="chat" size={18}/>Book on WhatsApp</a><a class="aside-phone" href={`tel:${clinic.phone}`} data-track="call_click"><Icon name="phone" size={16}/>{clinic.phoneDisplay}</a></div></aside></div></div><BookingBanner/>
+</Layout>
