@@ -1,0 +1,46 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import AppointmentForm from '../components/AppointmentForm.astro';
+import {clinic, whatsappBookingUrl, formsEnabled} from '../data/clinic';
+import {doctor} from '../data/evidence';
+const whatsappUrl = whatsappBookingUrl('/contact/');
+const checklist: [string, string][] = [
+  ['Bring what you already have', 'Previous dental records or X-rays, your medication list and relevant medical information.'],
+  ['Tell us what matters to you', 'Mention pain, dental anxiety, your preferred language or access needs when arranging the visit.'],
+  ['Write down your questions', 'Ask about the findings, alternatives, expected visits and the complete treatment estimate.'],
+];
+---
+<Layout title="Book a Dentist Visit | 32 Whites, Keshavnagar, Pune" description="Book with 32 Whites in Keshavnagar: call +91 98908 89241 or WhatsApp. Find Sunday and evening hours, Google Maps directions, parking and stair access." pageType="ContactPage" breadcrumbs={[{name:'Visit us',path:'/contact/'}]}>
+  <div class="container">
+    <section class="page-hero page-hero-wide"><span class="eyebrow">32 Whites · Keshavnagar, Pune</span><h1>Your next dental visit.<br/><span class="soft-text">Let’s get it in the diary.</span></h1><p>A check-up, a toothache or a question about your smile? Reach the clinic directly. We’ll confirm an available time, the consultation fee and anything to bring.</p><div class="actions"><a class="button button-dark" href={`tel:${clinic.phone}`} data-track="call_click"><Icon name="phone" size={18}/>Call {clinic.phoneDisplay}</a><a class="button button-outline" href={whatsappUrl} target="_blank" rel="noopener noreferrer" data-track="whatsapp_click"><Icon name="chat" size={18}/>Message on WhatsApp</a></div></section>
+
+    <div class="contact-summary">
+      <div><Icon name="clock" size={22}/><div><strong>Evening & Sunday hours</strong><p>{clinic.hours}<br/>{clinic.sunday}</p></div></div>
+      <div><Icon name="language" size={22}/><div><strong>Your preferred language</strong><p>English · Hindi · Marathi. Mention your preference when booking.</p></div></div>
+      <div><Icon name="stairs" size={22}/><div><strong>Parking & entrance</strong><p>Parking available. Access involves stairs. <a href="#access">Arrival details</a></p></div></div>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-info">
+        <section id="booking-options" aria-labelledby="booking-options-heading"><span class="eyebrow">Choose how to reach us</span><h2 id="booking-options-heading">Two simple ways to book</h2>
+          <div class="booking-options"><a class="booking-option" href={`tel:${clinic.phone}`} data-track="call_click"><Icon name="phone" size={22}/><div><strong>Call {clinic.phoneDisplay}</strong><span>Best for urgent availability or a quick question</span></div><Icon name="arrow" size={18}/></a><a class="booking-option" href={whatsappUrl} target="_blank" rel="noopener noreferrer" data-track="whatsapp_click"><Icon name="chat" size={22}/><div><strong>Message on WhatsApp</strong><span>Share your preferred day and time, then wait for confirmation</span></div><Icon name="diagonal" size={18}/></a></div>
+          <p class="form-note">A message or callback request does not reserve an appointment. The clinic team will confirm your visit.</p>
+        </section>
+        <section id="access" aria-labelledby="access-heading">
+          <h3 id="access-heading">Find the clinic</h3><address>{clinic.address}</address><a class="text-link" href={clinic.maps} target="_blank" rel="noopener noreferrer" data-track="directions_click">Get directions on Google Maps<Icon name="diagonal" size={14}/></a>
+          <img class="contact-photo" src="/images/clinic-720.webp" srcset="/images/clinic-360.webp 360w, /images/clinic-640.webp 640w, /images/clinic-720.webp 720w, /images/clinic-960.webp 960w" sizes="(max-width:767px) 92vw, 45vw" width="720" height="960" alt="Entrance and sign of 32 Whites Dental Clinic at Arc Pukhraj, opposite Renuka Mata Mandir" loading="lazy"/>
+          <h3>Know before you arrive</h3><p>Parking is available. The clinic entrance involves stairs. If stairs are difficult for you, call before travelling to discuss access.</p>
+          <h3>Plan the consultation fee</h3><p>Ask about the current consultation charge when booking. Treatment is priced according to the examination and the plan you choose.</p><a class="text-link" href="/pricing/">Know what an estimate should include<Icon name="arrow" size={16}/></a>
+        </section>
+      </div>
+      <div class="contact-side">
+        {formsEnabled && <section class="contact-form" id="appointment" aria-labelledby="appointment-heading"><span class="eyebrow">Prefer the team to contact you?</span><h2 id="appointment-heading">Request a callback</h2><p>Leave your name and number so the clinic can contact you about availability.</p><AppointmentForm/></section>}
+        <section class:list={['contact-form', {'section-sm': formsEnabled}]} aria-labelledby="checklist-heading"><span class="eyebrow">Before your first visit</span><h2 id="checklist-heading">A small checklist for a more useful visit</h2><div class="step-list">{checklist.map(([title, text], i) => <div class="step"><span>{String(i + 1).padStart(2, '0')}</span><div><h3>{title}</h3><p>{text}</p></div></div>)}</div><p class="form-note"><a class="text-link" href={doctor.profile}>Meet {doctor.name}, {doctor.degree}<Icon name="arrow" size={16}/></a></p></section>
+      </div>
+    </div>
+
+    <section class="notice notice-urgent"><h2 class="notice-title"><Icon name="alert" size={20}/>Dental pain or an injury? Please call.</h2><p>Call during clinic hours for urgent dental availability. Difficulty breathing or swallowing, serious injury or rapidly worsening swelling needs emergency medical help. Do not wait for an online response.</p><a class="text-link" href="/services/emergency-dental/">When to seek urgent care<Icon name="arrow" size={16}/></a></section>
+    <section class="section-sm"><nav class="chip-links" aria-label="Prepare for your visit"><a href="/concerns/">Start with a dental concern</a><a href="/blog/planning-your-first-dental-visit/">Your first-visit checklist</a><a href="/reviews/">Patient reviews</a></nav></section>
+  </div>
+</Layout>

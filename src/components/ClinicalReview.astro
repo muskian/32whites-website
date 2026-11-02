@@ -1,0 +1,23 @@
+---
+import editorial from '../../qa/editorial-review.json';
+import {doctor} from '../data/evidence';
+import {approvedReview} from '../lib/editorial.mjs';
+
+interface Props { path: string }
+const {path} = Astro.props;
+const review = approvedReview(editorial.pages.find(item => item.path === path));
+const approved = Boolean(review);
+const reviewedDate = review
+  ? new Intl.DateTimeFormat('en-IN', {day:'numeric', month:'long', year:'numeric', timeZone:'UTC'}).format(new Date(`${review.reviewedAt}T00:00:00Z`))
+  : null;
+---
+<aside class:list={['clinical-review', approved ? 'clinical-review-approved' : 'clinical-review-pending']} data-clinical-review data-review-status={approved ? 'approved' : 'pending'} aria-label="Clinical content review status">
+  <span class="clinical-review-mark" aria-hidden="true">{approved ? '✓' : 'i'}</span>
+  <div>
+    {approved ? (
+      <><strong>Clinically reviewed</strong><p>Reviewed by {review?.reviewer === doctor.name ? <a href={doctor.profile}>{review.reviewer}</a> : review?.reviewer} on {reviewedDate}.</p></>
+    ) : (
+      <><strong>Clinical review before publication</strong><p>This development draft is awaiting review of the exact clinical wording. <a href={doctor.profile}>Meet {doctor.name}, {doctor.degree}</a>.</p></>
+    )}
+  </div>
+</aside>

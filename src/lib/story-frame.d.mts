@@ -1,0 +1,1 @@
+export function storyFrame(scroll: number, height: number, viewport: number, header?: number): {progress: number; turn: number; scale: number; lift: number; copy: number; photo: number; wash: number[]; finished: boolean};

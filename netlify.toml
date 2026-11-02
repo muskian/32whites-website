@@ -1,0 +1,23 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "24.22.1"
+
+# Unset production flags default to false in src/data/clinic.ts.
+# Owner authorized production publication on 2 November 2026.
+# Keep launch flags scoped to production; previews below stay non-indexable.
+# Do not add global flags here: they would override hosting UI values.
+
+[context.production.environment]
+  PUBLIC_SITE_INDEXABLE = "true"
+  PUBLIC_FORMS_ENABLED = "false"
+
+[context.deploy-preview.environment]
+  PUBLIC_SITE_INDEXABLE = "false"
+  PUBLIC_FORMS_ENABLED = "false"
+
+[context.branch-deploy.environment]
+  PUBLIC_SITE_INDEXABLE = "false"
+  PUBLIC_FORMS_ENABLED = "false"

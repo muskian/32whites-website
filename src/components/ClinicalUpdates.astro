@@ -1,0 +1,10 @@
+---
+import {clinicalUpdates} from '../data/evidence';
+import TreatmentVisual from './TreatmentVisual.astro';
+import Icon from './Icon.astro';
+---
+<div class="update-grid">{clinicalUpdates.map(update => <article class="update-card" id={update.treatment ?? 'sterilisation'}>
+  <div class="update-art">{update.treatment ? <TreatmentVisual variant={update.treatment === 'root-canal-treatment' ? 'tooth' : 'smile'} id={`update-${update.treatment}`}/> : <div class="sterilisation-visual"><Icon name="shield" size={72}/><span>Instrument preparation</span></div>}</div>
+  <span class="eyebrow">{update.category}</span><h3>{update.title}</h3><p>{update.description}</p>
+  <div class="update-footer"><span>{update.date}</span><a class="text-link" href={update.source} target="_blank" rel="noopener noreferrer">Read the original clinic post<Icon name="diagonal" size={14}/></a>{update.treatment && <a class="text-link" href={`/services/${update.treatment}/`}>Explore the treatment<Icon name="arrow" size={16}/></a>}</div>
+</article>)}</div>

@@ -1,0 +1,13 @@
+import {readFile, writeFile} from 'node:fs/promises';
+import {auditSite} from './lib/site-audit.mjs';
+const [mode = 'preview', base = 'http://127.0.0.1:4322'] = process.argv.slice(2);
+if (!['preview', 'production'].includes(mode)) throw new Error('Usage: npm run audit:site -- preview|production URL');
+const sitemap = await readFile('dist/sitemap.xml', 'utf8');
+const paths = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(m => new URL(m[1]).pathname);
+const redirects = (await readFile('dist/_redirects', 'utf8')).trim().split(/\r?\n/).map(line => line.split(/\s+/).slice(0, 2));
+const report = await auditSite({base, mode, paths, redirects});
+const destination = `qa/site-audit-${mode}.json`;
+await writeFile(destination, JSON.stringify(report, null, 2) + '\n');
+console.log(`${report.pass ? 'PASS' : 'FAIL'}: ${report.pagesChecked} pages, ${report.assetsChecked} assets; ${destination}`);
+for (const check of report.checks.filter(c => !c.pass)) console.error(`${check.path}: ${check.errors.join('; ')}`);
+if (!report.pass) process.exitCode = 1;

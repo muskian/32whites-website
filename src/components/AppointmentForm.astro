@@ -1,0 +1,58 @@
+---
+import {formsEnabled, clinic} from '../data/clinic';
+import Icon from './Icon.astro';
+---
+<form name="appointment-request" method="POST" action="/contact/" data-netlify="true" netlify-honeypot="website" data-appointment data-enabled={formsEnabled ? 'true' : 'false'}>
+  <fieldset disabled data-form-fields>
+  <input type="hidden" name="form-name" value="appointment-request"/>
+  <p class="honeypot"><label>Leave this field empty<input name="website" autocomplete="off" tabindex="-1"/></label></p>
+  <div class="form-row">
+    <label>Your name<input name="name" autocomplete="name" required minlength="2" maxlength="80" placeholder="Full name"/></label>
+    <label>Phone number<input name="phone" type="tel" autocomplete="tel" inputmode="tel" required minlength="10" maxlength="20" pattern="[+0-9 \(\)\-]{10,20}" placeholder="Your contact number"/></label>
+  </div>
+  <label class="consent"><input type="checkbox" name="consent" value="callback-request" required/><span>I agree to be contacted about this request. <a href="/privacy/">Privacy notice</a></span></label>
+  <button class="button button-dark" type="submit"><span data-submit-label>Request a callback</span><Icon name="arrow" size={18}/></button>
+  <p class="form-note">A request is not a confirmed appointment. Please avoid sending medical details.</p>
+  <p data-form-status role="status" aria-live="polite" class="form-status"></p>
+  </fieldset>
+  <noscript><p>To arrange a visit, please <a href={`tel:${clinic.phone}`}>call {clinic.phoneDisplay}</a>. The online request requires JavaScript.</p></noscript>
+</form>
+<script>
+  import {normalizePhone, submitAppointment} from '../lib/appointments.mjs';
+  document.querySelectorAll<HTMLFormElement>('[data-appointment]').forEach(form => {
+    const status = form.querySelector<HTMLElement>('[data-form-status]')!;
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const label = form.querySelector<HTMLElement>('[data-submit-label]')!;
+    const phone = form.elements.namedItem('phone') as HTMLInputElement;
+    phone.addEventListener('input', () => phone.setCustomValidity(''));
+    let pending = false;
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      if (pending) return;
+      if (!normalizePhone(phone.value)) {
+        phone.setCustomValidity('Enter a valid phone number, including a country code if needed.');
+        form.reportValidity(); return;
+      }
+      if (!form.reportValidity()) return;
+      if (form.dataset.enabled !== 'true') {
+        status.textContent = 'Online requests are not connected in this preview. Please call the clinic to arrange a visit.';
+        status.dataset.state = 'error'; return;
+      }
+      pending = true; button.disabled = true; label.textContent = 'Sending request…';
+      status.textContent = ''; status.dataset.state = '';
+      try {
+        await submitAppointment(new FormData(form));
+        status.textContent = 'Your request has been received. The clinic will contact you to confirm availability.';
+        status.dataset.state = 'success'; form.reset();
+        window.dispatchEvent(new CustomEvent('clinic:lead', {detail: {event: 'appointment_request_success'}}));
+      } catch {
+        status.textContent = 'We could not send your request. Your details are still here. Please try again or call the clinic.';
+        status.dataset.state = 'error';
+      } finally {
+        pending = false; button.disabled = false; label.textContent = 'Request a callback';
+      }
+    });
+    // Enable only once the submit handler is attached. Without JS, use the call link.
+    form.querySelector<HTMLFieldSetElement>('[data-form-fields]')!.disabled = false;
+  });
+</script>

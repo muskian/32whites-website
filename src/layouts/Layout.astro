@@ -1,0 +1,135 @@
+---
+import '../styles/global.css';
+import '../styles/editorial.css';
+import '@fontsource/manrope/latin-400.css';
+import '@fontsource/manrope/latin-500.css';
+import '@fontsource/manrope/latin-600.css';
+import '@fontsource/manrope/latin-700.css';
+import Icon from '../components/Icon.astro';
+import Search from '../components/Search.astro';
+import HomeStory from '../components/HomeStory.astro';
+import editorial from '../../qa/editorial-review.json';
+import {doctor} from '../data/evidence';
+import {reviewSchema} from '../lib/editorial.mjs';
+import {clinic, clinicSchema, doctorSchema, production, whatsappBookingUrl} from '../data/clinic';
+interface Props {title: string; description: string; breadcrumbs?: {name: string; path: string}[]; schema?: Record<string, unknown>[]; noindex?: boolean; canonicalTag?: boolean; pageType?: string; mainEntity?: string}
+const {title, description, breadcrumbs = [], schema = [], noindex = false, canonicalTag = true, pageType = 'WebPage', mainEntity} = Astro.props;
+const clinicalReview = reviewSchema(editorial.pages.find(item => item.path === Astro.url.pathname), doctor, clinic.url);
+const canonical = new URL(Astro.url.pathname, clinic.url).href;
+const bookingUrl = whatsappBookingUrl(Astro.url.pathname);
+const indexable = production && !noindex;
+const graph = [clinicSchema(), doctorSchema(), { '@type': 'WebSite', '@id': `${clinic.url}/#website`, name: clinic.name, url: clinic.url, publisher: {'@id': `${clinic.url}/#clinic`} },
+  { '@type': pageType, '@id': `${canonical}#page`, url: canonical, name: title, description, isPartOf: {'@id': `${clinic.url}/#website`}, ...clinicalReview, ...(mainEntity ? {mainEntity: {'@id': mainEntity}} : {}) },
+  ...(breadcrumbs.length ? [{'@type': 'BreadcrumbList', itemListElement: [{name: 'Home', path: '/'}, ...breadcrumbs].map((item, i) => ({'@type': 'ListItem', position: i + 1, name: item.name, item: new URL(item.path, clinic.url).href}))}] : []), ...schema];
+const active = Astro.url.pathname;
+const isCurrent = (href: string) => active.startsWith(href);
+const links = [
+  {href: '/services/', label: 'Treatments'},
+  {href: '/concerns/', label: 'Concerns'},
+  {href: '/doctors/dr-bhakti-ghanwat-gavade/', label: 'Your dentist'},
+  {href: '/reviews/', label: 'Reviews'},
+  {href: '/pricing/', label: 'Costs'},
+  {href: '/contact/', label: 'Visit us'},
+];
+const mobileLinks = [...links.slice(0, 2), {href: '/blog/', label: 'Patient guides'}, ...links.slice(2, 4), {href: '/about/', label: 'Our clinic'}, ...links.slice(4)];
+---
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <meta name="theme-color" content="#fffdfd"/>
+    <link rel="preload" href="/fonts/cormorant-garamond-medium-latin.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
+    <title>{title}</title><meta name="description" content={description}/>
+    <meta name="robots" content={indexable ? 'index, follow, max-image-preview:large' : 'noindex, nofollow'}/>
+    {canonicalTag && <link rel="canonical" href={canonical}/>}<link rel="icon" type="image/png" sizes="192x192" href="/images/favicon.png"/><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png"/>
+    <meta property="og:type" content="website"/><meta property="og:title" content={title}/><meta property="og:description" content={description}/><meta property="og:url" content={canonical}/><meta property="og:site_name" content={clinic.name}/><meta property="og:locale" content="en_IN"/>
+    <meta property="og:image" content={`${clinic.url}/images/social-card.png`}/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="32 Whites Dental Clinic — dental care in Keshavnagar, Pune"/>
+    <meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content={title}/><meta name="twitter:description" content={description}/><meta name="twitter:image" content={`${clinic.url}/images/social-card.png`}/>
+    <script type="application/ld+json" set:html={JSON.stringify({'@context': 'https://schema.org', '@graph': graph}).replace(/</g, '\\u003c')}/>
+  </head>
+  <body>
+    <!-- Preserve the owner's exact mark; map black ink to the approved text maroon. -->
+    <svg class="brand-filter" width="0" height="0" aria-hidden="true" focusable="false"><defs><filter id="brand-maroon" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values=".5372549 0 0 0 .4627451 0 .7176471 0 0 .2823529 0 0 .6392157 0 .3607843 0 0 0 1 0"/></filter></defs></svg>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <header class="site-header" data-site-header>
+      <div class="container header-inner">
+        <a class="brand" href="/" aria-label={`${clinic.name} home`}><img src="/images/logo.png" width="36" height="36" alt=""/><span>{clinic.name}</span></a>
+        <nav class="desktop-nav" aria-label="Main navigation">{links.map(link => <a href={link.href} aria-current={isCurrent(link.href) ? 'page' : undefined}>{link.label}</a>)}</nav>
+        <div class="header-actions">
+          <Search/>
+          <a class="button button-dark button-sm header-book" href={bookingUrl} target="_blank" rel="noopener noreferrer" data-track="whatsapp_booking_click">Book on WhatsApp<Icon name="diagonal" size={16}/></a>
+          <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="mobile-navigation"><span></span><span></span></button>
+        </div>
+      </div>
+      <nav id="mobile-navigation" class="mobile-nav" aria-label="Mobile navigation" hidden>
+        <div class="mobile-nav-links">{mobileLinks.map(link => <a href={link.href} aria-current={isCurrent(link.href) ? 'page' : undefined}>{link.label}<Icon name="arrow" size={18}/></a>)}</div>
+        <div class="mobile-nav-actions">
+          <a class="button button-dark" href={bookingUrl} target="_blank" rel="noopener noreferrer" data-track="whatsapp_booking_click"><Icon name="chat" size={18}/>Book on WhatsApp</a>
+          <a class="button button-outline" href={`tel:${clinic.phone}`} data-track="call_click"><Icon name="phone" size={18}/>Call {clinic.phoneDisplay}</a>
+        </div>
+        <p class="mobile-nav-meta">{clinic.hours} · {clinic.sunday}</p>
+      </nav>
+    </header>
+    {active === '/' && <HomeStory/>}
+    <main id="main" tabindex="-1">
+      {breadcrumbs.length > 0 && <nav class="breadcrumbs container" aria-label="Breadcrumb"><a href="/">Home</a>{breadcrumbs.map((crumb, i) => <><span aria-hidden="true">/</span>{i === breadcrumbs.length - 1 ? <span aria-current="page">{crumb.name}</span> : <a href={crumb.path}>{crumb.name}</a>}</>)}</nav>}
+      <slot/>
+    </main>
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div><a class="footer-brand" href="/"><img src="/images/logo.png" width="36" height="36" alt=""/><span>{clinic.name}</span></a><p>Dental care in Keshavnagar, Pune, with {doctor.name}, {doctor.degree}.</p><address>{clinic.address}</address><a class="footer-phone" href={`tel:${clinic.phone}`} data-track="call_click">{clinic.phoneDisplay}</a></div>
+        <div><h2>Care</h2><a href="/services/">All treatments</a><a href="/concerns/">Dental concerns</a><a href="/blog/">Patient guides</a><a href="/pricing/">Costs & planning</a></div>
+        <div><h2>Clinic</h2><a href="/about/">Our clinic</a><a href={doctor.profile}>Dr. Bhakti</a><a href="/reviews/">Patient reviews</a><a href="/our-work/">Clinical updates</a><a href="/privacy/">Privacy notice</a></div>
+        <div><h2>Visit</h2><p>{clinic.hours}<br/>{clinic.sunday}</p><a href={bookingUrl} target="_blank" rel="noopener noreferrer" data-track="whatsapp_booking_click">Book on WhatsApp</a><a href={clinic.maps} target="_blank" rel="noopener noreferrer" data-track="directions_click">Directions on Google Maps</a><a href="/contact/#access">Parking & access</a></div>
+      </div>
+      <div class="container footer-bottom"><span>© {new Date().getFullYear()} {clinic.name}</span><span>English · Hindi · Marathi · Parking available · Access involves stairs</span></div>
+    </footer>
+    <nav class="mobile-actions" aria-label="Quick contact"><a class="button button-outline" href={`tel:${clinic.phone}`} data-track="call_click"><Icon name="phone" size={18}/>Call</a><a class="button button-dark" href={bookingUrl} target="_blank" rel="noopener noreferrer" data-track="whatsapp_booking_click"><Icon name="chat" size={18}/>Book on WhatsApp</a></nav>
+    <script>
+      import {buildClinicEvent} from '../lib/tracking.mjs';
+      const root = document.documentElement;
+      const header = document.querySelector<HTMLElement>('[data-site-header]');
+      const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
+      const menu = document.querySelector<HTMLElement>('#mobile-navigation');
+      function setMenu(open: boolean, restoreFocus = false) {
+        if (!toggle || !menu) return;
+        menu.hidden = !open;
+        toggle.setAttribute('aria-expanded', String(open));
+        toggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+        root.classList.toggle('menu-open', open);
+        if (open) menu.querySelector<HTMLElement>('a')?.focus({preventScroll: true});
+        else if (restoreFocus) toggle.focus();
+      }
+      toggle?.addEventListener('click', () => setMenu(toggle.getAttribute('aria-expanded') !== 'true'));
+      document.addEventListener('keydown', event => {if (event.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') setMenu(false, true);});
+      menu?.querySelectorAll('a').forEach(link => link.addEventListener('click', () => setMenu(false)));
+      window.matchMedia('(min-width: 1200px)').addEventListener('change', event => {if (event.matches) setMenu(false);});
+      const onScroll = () => header?.toggleAttribute('data-scrolled', window.scrollY > 4);
+      onScroll();
+      window.addEventListener('scroll', onScroll, {passive: true});
+
+      // Highlight the section being read in an on-page table of contents.
+      const tocLinks = [...document.querySelectorAll<HTMLAnchorElement>('[data-toc] a[href^="#"]')];
+      const tocTargets = tocLinks.map(link => document.getElementById(decodeURIComponent(link.hash.slice(1)))).filter((el): el is HTMLElement => Boolean(el));
+      if (tocTargets.length && 'IntersectionObserver' in window) {
+        const visible = new Set<string>();
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => entry.isIntersecting ? visible.add(entry.target.id) : visible.delete(entry.target.id));
+          const current = tocTargets.find(el => visible.has(el.id));
+          if (current) tocLinks.forEach(link => link.hash.slice(1) === current.id ? link.setAttribute('aria-current', 'true') : link.removeAttribute('aria-current'));
+        }, {rootMargin: '-15% 0px -65% 0px'});
+        tocTargets.forEach(el => observer.observe(el));
+      }
+
+      function publishClinicEvent(eventName: string) {
+        const detail = buildClinicEvent(eventName);
+        if (!detail) return;
+        window.dispatchEvent(new CustomEvent('clinic:measurement', {detail}));
+        const dataLayer = (window as Window & {dataLayer?: unknown[]}).dataLayer;
+        if (Array.isArray(dataLayer)) dataLayer.push(detail);
+      }
+      document.querySelectorAll<HTMLElement>('[data-track]').forEach(link => link.addEventListener('click', () => publishClinicEvent(link.dataset.track ?? '')));
+      window.addEventListener('clinic:lead', event => publishClinicEvent((event as CustomEvent<{event?: string}>).detail?.event ?? ''));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/Icon.astro';
+import BookingBanner from '../../components/BookingBanner.astro';
+import ClinicalReview from '../../components/ClinicalReview.astro';
+import {guides} from '../../data/guides';
+import {treatments} from '../../data/treatments';
+import {symptoms} from '../../data/symptoms';
+import {whatsappBookingUrl} from '../../data/clinic';
+export function getStaticPaths() { return guides.map(guide => ({params:{slug:guide.slug},props:{guide}})); }
+const {guide} = Astro.props;
+const relatedConcerns = guide.concerns.map(slug => symptoms.find(item => item.slug === slug)).filter(Boolean);
+const nextGuides = guide.relatedGuides.map(slug => guides.find(item => item.slug === slug)).filter(Boolean);
+const reviewPath = `/blog/${guide.slug}/`;
+const bookingUrl = whatsappBookingUrl(reviewPath);
+---
+<Layout title={`${guide.title} | 32 Whites`} description={guide.description} breadcrumbs={[{name:'Patient guides',path:'/blog/'},{name:guide.title,path:`/blog/${guide.slug}/` }]} pageType="MedicalWebPage">
+  <div class="container"><section class="page-hero page-hero-wide"><span class="eyebrow">{guide.category}</span><h1>{guide.title}</h1><p>{guide.description}</p></section><div class="content-grid"><article class="article-content"><ClinicalReview path={reviewPath}/>{guide.sections.map((section, i) => <section id={`section-${i}`}><h2>{section.heading}</h2><p>{section.text}</p></section>)}<section><h2>Explore related care</h2><nav class="chip-links" aria-label="Related treatments">{guide.related.map(slug => <a href={`/services/${slug}/`}>{treatments.find(t => t.slug === slug)!.name}<Icon name="arrow" size={14}/></a>)}</nav></section>{(relatedConcerns.length > 0 || nextGuides.length > 0) && <section><h2>Continue from the question you have</h2><div class="context-links">{relatedConcerns.map(item => item && <a href={`/symptoms/${item.slug}/`}><span>Concern</span><strong>{item.name}</strong><small>{item.headline}</small></a>)}{nextGuides.map(item => item && <a href={`/blog/${item.slug}/`}><span>Related guide</span><strong>{item.title}</strong><small>{item.description}</small></a>)}</div></section>}<p class="editorial-note">General information for planning a visit. This guide is not individual clinical advice. Further reading: {guide.sources.map((source, i) => <span>{i > 0 ? ' · ' : ''}<a href={source.url} target="_blank" rel="noopener noreferrer">{source.label}</a></span>)}.</p></article><aside class="content-aside" aria-labelledby="toc-heading"><h2 id="toc-heading">In this guide</h2><nav class="toc" data-toc aria-labelledby="toc-heading">{guide.sections.map((section, i) => <a href={`#section-${i}`}>{section.heading}</a>)}</nav><div class="aside-cta"><p>Bring your questions to the visit.</p><a class="button button-dark button-block" href={bookingUrl} target="_blank" rel="noopener noreferrer" data-track="whatsapp_booking_click"><Icon name="chat" size={18}/>Book on WhatsApp</a></div></aside></div></div><BookingBanner/>
+</Layout>

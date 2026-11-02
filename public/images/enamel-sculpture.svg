@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="660" viewBox="0 0 680 660" fill="none">
+ <defs>
+  <linearGradient id="enamel" x1="210" y1="120" x2="480" y2="480" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset=".32" stop-color="#fffdfc"/><stop offset=".62" stop-color="#d8eaf0"/><stop offset=".82" stop-color="#f8e5e9"/><stop offset="1" stop-color="#aecbd9"/></linearGradient>
+  <linearGradient id="crown" x1="250" y1="130" x2="435" y2="295" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset="1" stop-color="#c6dce6"/></linearGradient>
+  <linearGradient id="plinth" x1="160" y1="530" x2="508" y2="611" gradientUnits="userSpaceOnUse"><stop stop-color="#f7e2e8"/><stop offset=".5" stop-color="#fceef1"/><stop offset="1" stop-color="#deb7c7"/></linearGradient>
+  <linearGradient id="glass" x1="485" y1="110" x2="550" y2="400"><stop stop-color="#fff" stop-opacity=".8"/><stop offset="1" stop-color="#fff" stop-opacity=".05"/></linearGradient>
+  <radialGradient id="shadow"><stop stop-color="#31516a" stop-opacity=".22"/><stop offset="1" stop-color="#31516a" stop-opacity="0"/></radialGradient>
+  <filter id="soft"><feGaussianBlur stdDeviation="5"/></filter>
+ </defs>
+ <circle cx="349" cy="285" r="237" stroke="#fff" stroke-opacity=".65"/>
+ <circle cx="349" cy="285" r="215" stroke="#fff" stroke-opacity=".35"/>
+ <path d="M550 167V426" stroke="url(#glass)" stroke-width="40" stroke-linecap="round"/>
+ <ellipse cx="345" cy="587" rx="245" ry="38" fill="url(#shadow)"/>
+ <path d="M158 537C158 511 506 511 506 537V568C506 607 158 607 158 568Z" fill="url(#plinth)"/>
+ <ellipse cx="332" cy="537" rx="174" ry="32" fill="#f9e9ee"/>
+ <ellipse cx="336" cy="533" rx="103" ry="14" fill="#7295a4" opacity=".2" filter="url(#soft)"/>
+ <g transform="rotate(-12 340 320)">
+  <path d="M335 150C291 120 234 122 209 155C170 206 205 261 221 297C240 337 239 407 261 463C270 486 289 489 299 465C313 432 315 357 339 353C364 349 371 434 392 465C406 485 424 470 430 449C444 400 445 345 463 298C477 261 504 202 479 164C453 124 390 123 353 147C347 151 341 152 335 150Z" fill="url(#enamel)" stroke="#fff" stroke-opacity=".85" stroke-width="2"/>
+  <path d="M217 170C243 139 282 146 307 161C326 173 338 182 354 178C380 169 411 141 449 158C471 169 481 197 470 222C456 249 430 249 408 237C384 222 371 220 351 234C328 249 320 252 295 240C266 226 239 243 222 220C211 206 206 184 217 170Z" fill="url(#crown)"/>
+  <path d="M232 170C249 158 273 159 289 165" stroke="#fff" stroke-width="13" stroke-linecap="round"/>
+  <path d="M214 220C222 252 242 282 249 318C258 364 256 401 272 437" stroke="#fff" stroke-opacity=".85" stroke-width="9" stroke-linecap="round"/>
+  <path d="M335 163C354 185 367 186 392 174M298 238C318 228 328 217 339 199M350 235C359 221 372 214 391 214" stroke="#a8c5d3" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/>
+  <path d="M339 353C336 318 339 291 348 269" stroke="#9dbdcd" stroke-opacity=".3" stroke-width="6" stroke-linecap="round"/>
+ </g>
+ <path d="M118 257V285M104 271H132" stroke="#315f7d" stroke-width="1.5"/>
+ <path d="M526 458V486M512 472H540" stroke="#315f7d" stroke-width="1.5"/>
+ <circle cx="510" cy="105" r="6" fill="#edbdcf"/>
+ <circle cx="139" cy="418" r="4" fill="#fff"/>
+</svg>

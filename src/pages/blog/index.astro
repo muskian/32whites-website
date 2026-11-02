@@ -1,0 +1,9 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/Icon.astro';
+import BookingBanner from '../../components/BookingBanner.astro';
+import {guides} from '../../data/guides';
+---
+<Layout title="Dental Treatment Guides for Patients | 32 Whites Pune" description="Compare root canal and extraction, missing-tooth options, braces and aligners, restorations, costs and first-visit planning with 32 Whites in Keshavnagar." breadcrumbs={[{name:'Patient guides',path:'/blog/'}]}>
+  <div class="container"><section class="page-hero page-hero-wide"><span class="eyebrow">Patient decision guides</span><h1>A clearer question now.<br/><span class="soft-text">A better conversation at the clinic.</span></h1><p>Compare complete treatment routes, understand which findings affect the decision and bring the right questions to your assessment. These guides explain the conversation without trying to diagnose you online.</p></section><div class="guide-grid section-sm">{guides.map(g => <article class="guide-card"><span class="eyebrow">{g.category}</span><h2 class="guide-title"><a href={`/blog/${g.slug}/`}>{g.title}</a></h2><p>{g.description}</p><span class="text-link" aria-hidden="true">Read this guide<Icon name="arrow" size={16}/></span></article>)}</div></div><BookingBanner/>
+</Layout>

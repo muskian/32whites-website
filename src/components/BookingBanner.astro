@@ -1,0 +1,30 @@
+---
+import AppointmentForm from './AppointmentForm.astro';
+import VisitFacts from './VisitFacts.astro';
+import Icon from './Icon.astro';
+import {clinic, whatsappBookingUrl, formsEnabled} from '../data/clinic';
+const bookingUrl = whatsappBookingUrl(Astro.url.pathname);
+---
+<section class="booking-banner container" aria-labelledby="booking-title" id="appointment">
+  <div>
+    <span class="eyebrow">Your next step, made simple</span>
+    <h2 id="booking-title">Ready to give your teeth some attention?</h2>
+    <p>Call or WhatsApp 32 Whites to choose a visit time. Tell the team what brings you here and ask about the consultation fee.</p>
+    <div class="booking-options">
+      <a class="booking-option" href={`tel:${clinic.phone}`} data-track="call_click"><Icon name="phone" size={22}/><div><strong>Call {clinic.phoneDisplay}</strong><span>Best for urgent availability or a quick question</span></div><Icon name="arrow" size={18}/></a>
+      <a class="booking-option" href={bookingUrl} target="_blank" rel="noopener noreferrer" data-track="whatsapp_booking_click"><Icon name="chat" size={22}/><div><strong>Book on WhatsApp</strong><span>Opens a draft message that you send yourself</span></div><Icon name="diagonal" size={18}/></a>
+    </div>
+    <p class="form-note">The clinic confirms your appointment after you send the message. Please call for urgent dental availability.</p>
+  </div>
+  <div class="booking-practical">
+    {formsEnabled ? <>
+      <h3>Prefer a callback?</h3>
+      <p>Leave a name and number for the team to contact you.</p>
+      <AppointmentForm/>
+    </> : <>
+      <h3>Before you visit</h3>
+      <VisitFacts/>
+      <a class="text-link" href="/contact/#access">Address, parking & stair access<Icon name="arrow" size={16}/></a>
+    </>}
+  </div>
+</section>

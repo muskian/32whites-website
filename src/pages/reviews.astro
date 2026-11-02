@@ -1,0 +1,11 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import ReviewCards from '../components/ReviewCards.astro';
+import ReviewInvitation from '../components/ReviewInvitation.astro';
+import {reviewSnapshot} from '../data/evidence';
+---
+<Layout title="Patient Reviews & Google Rating | 32 Whites Dental, Pune" description="See the dated Google rating for 32 Whites Dental Clinic and follow individual review sources. Read original experiences before planning your visit." pageType="CollectionPage" breadcrumbs={[{name:'Patient reviews',path:'/reviews/'}]}>
+  <div class="container"><section class="page-hero page-hero-wide"><span class="eyebrow">Patient reviews · 32 Whites on Google</span><h1>Choosing a dentist?<br/><span class="soft-text">Hear from people who’ve visited.</span></h1><p>32 Whites’ Google profile showed <strong>{reviewSnapshot.rating}/5 from {reviewSnapshot.count} reviews</strong> when checked on {reviewSnapshot.checked}. Explore the original experiences below and the full listing on Google. The rating and count can change.</p><div class="actions"><a class="button button-dark" href={reviewSnapshot.source} target="_blank" rel="noopener noreferrer">Browse the full Google listing<Icon name="diagonal" size={16}/></a></div></section><ReviewCards/><section class="section-sm article-content narrow"><h2>Read beyond a star rating</h2><p>These are selected public Google reviews, not a complete sample. Each card identifies its reviewer and links to the original source; the homepage includes short excerpts. Follow the source for the review date, full text and any updates.</p><p>Individual experiences and treatment needs vary. Reviews can help you prepare questions, but they do not establish a treatment’s suitability or guarantee an outcome.</p><p>For a balanced view, browse the full Google listing, including more recent and lower-rated reviews. If you have a concern about your care, <a href="/contact/">contact the clinic</a> directly.</p><div class="filter-links"><a href="/doctors/dr-bhakti-ghanwat-gavade/">Meet your dentist</a><a href="/our-work/">Explore clinical updates</a><a href="/contact/">Plan your visit</a></div></section></div>
+  <div class="container"><ReviewInvitation/></div>
+</Layout>

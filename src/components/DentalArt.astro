@@ -1,0 +1,30 @@
+---
+interface Props { variant?: 'tooth' | 'align' | 'implant'; class?: string; id?: string }
+const {variant = 'tooth', class: className = ''} = Astro.props;
+const id = `art-${variant}-${Astro.props.id ?? 'default'}`;
+---
+<svg class={`dental-art ${className}`} viewBox="0 0 360 340" fill="none" aria-hidden="true">
+  <defs>
+    <linearGradient id={`${id}-body`} x1="82" y1="55" x2="277" y2="267" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset=".45" stop-color="#f5fbff"/><stop offset="1" stop-color="#89afc9"/></linearGradient>
+    <linearGradient id={`${id}-shade`} x1="135" y1="70" x2="239" y2="294"><stop stop-color="#f7fbfd"/><stop offset="1" stop-color="#668bac"/></linearGradient>
+    <radialGradient id={`${id}-halo`}><stop stop-color="#eefaff"/><stop offset="1" stop-color="#eefaff" stop-opacity="0"/></radialGradient>
+  </defs>
+  <circle cx="184" cy="160" r="150" fill={`url(#${id}-halo)`}/>
+  <ellipse cx="188" cy="292" rx="95" ry="12" fill="#294c76" opacity=".1"/>
+  {variant !== 'implant' ? <>
+    <path d="M182 75C140 44 97 51 91 95c-7 42 20 76 28 109 8 36 10 69 29 69 15 0 13-59 34-59 20 0 19 59 34 59 19 0 21-33 30-69 8-34 33-67 27-109-6-44-50-51-91-20Z" fill={`url(#${id}-body)`} stroke="#c3d8e6" stroke-width="2"/>
+    <path d="M182 75c13 11 28 14 43 11M110 94c-4 23 3 42 10 57" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity=".9"/>
+    <path d="M182 214c-13-1-18 13-23 34 4-34 7-62 23-62 19 0 22 33 29 64-8-26-14-36-29-36Z" fill={`url(#${id}-shade)`} opacity=".7"/>
+    {variant === 'align' && <>
+      <path d="M103 142c47 27 109 26 159 0M112 179c42 22 97 21 141-1" stroke="#527b9c" stroke-width="3" opacity=".6"/>
+      <path d="M125 147h21v28h-21zM172 153h21v28h-21zM220 147h21v28h-21z" fill="#e5f0f8" stroke="#7298b5" stroke-width="2"/>
+      <path d="M106 160c52 13 103 13 151-1" stroke="#7298b5" stroke-width="3"/>
+    </>}
+  </> : <>
+    <path d="M140 146h87v102l-44 32-43-32V146Z" fill={`url(#${id}-shade)`} stroke="#7298b5" stroke-width="2"/>
+    {[156,174,192,210,228].map(y => <path d={`M131 ${y}l105 12`} stroke="#dcecf6" stroke-width="7" stroke-linecap="round"/>)}
+    <path d="M126 66c18-15 96-15 113 0l15 70c-18 19-126 19-143 0l15-70Z" fill={`url(#${id}-body)`} stroke="#c3d8e6" stroke-width="2"/>
+    <path d="M137 75c19-9 51-11 72-5" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+  </>}
+  <path d="m284 61 4 13 13 4-13 4-4 13-4-13-13-4 13-4 4-13ZM75 201l3 8 8 3-8 3-3 8-3-8-8-3 8-3 3-8Z" fill="#fff" opacity=".9"/>
+</svg>

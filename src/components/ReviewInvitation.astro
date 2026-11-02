@@ -1,0 +1,14 @@
+---
+import {clinic} from '../data/clinic';
+import reviewLink from '../data/review-link.json';
+import {verifiedReviewLink} from '../lib/review-link.mjs';
+const directLink = verifiedReviewLink(reviewLink);
+---
+<section id="share-experience" class="section-sm article-content narrow" aria-labelledby="share-experience-title">
+  <span class="eyebrow">For patients who have visited</span>
+  <h2 id="share-experience-title">Your experience can help someone choose their care.</h2>
+  <p>If you’ve visited 32 Whites, you’re welcome to share an honest review on Google. Positive, mixed or critical feedback is welcome. Leaving a review is entirely optional.</p>
+  <p>Google reviews are public. Share only what you’re comfortable making public, and avoid including medical records or contact details.</p>
+  <div class="actions"><a class="button button-dark" href={directLink || clinic.maps} target="_blank" rel="noopener noreferrer">{directLink ? 'Write a Google review' : 'Open our Google profile'}</a></div>
+  {!directLink && <p>On our profile, choose “Write a review”. Google may ask you to sign in.</p>}
+</section>
