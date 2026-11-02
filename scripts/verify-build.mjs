@@ -78,7 +78,8 @@ for(const m of sitemap.matchAll(/<loc>(.*?)<\/loc>/g)){const url=new URL(m[1]).p
 for(const url of content.keys())if(url!=='/404.html'&&!sitemap.includes(`<loc>https://32whitesdental.com${url}</loc>`))errors.push(`Content page absent from sitemap: ${url}`);
 const security = `/*\n  Cache-Control: public, max-age=0, must-revalidate\n  Strict-Transport-Security: max-age=31536000\n  X-Content-Type-Options: nosniff\n  X-Frame-Options: DENY\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n  Cross-Origin-Opener-Policy: same-origin-allow-popups\n  Cross-Origin-Resource-Policy: same-site\n  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'; object-src 'none'\n${process.env.PUBLIC_SITE_INDEXABLE!=='true'?'  X-Robots-Tag: noindex, nofollow\n':''}\n/_astro/*\n  Cache-Control: public, max-age=31536000, immutable\n`;
 await writeFile(path.join(root,'_headers'),security);
-const redirects=['/index.html / 301','/about.html /about/ 301','/contact.html /contact/ 301','/pricing.html /pricing/ 301','/blog/index.html /blog/ 301'];
+// Force redirects for actual index files; Netlify otherwise serves the matching file.
+const redirects=['/index.html / 301!','/about.html /about/ 301','/contact.html /contact/ 301','/pricing.html /pricing/ 301','/blog/index.html /blog/ 301!'];
 for(const url of content.keys())if(url.startsWith('/services/')||url.startsWith('/symptoms/'))if(url.split('/').length===4)redirects.push(`${url.slice(0,-1)}.html ${url} 301`);
 await writeFile(path.join(root,'_redirects'),redirects.join('\n')+'\n');
 const fileSizes=new Map(await Promise.all(files.map(async file=>[file,(await stat(file)).size])));
