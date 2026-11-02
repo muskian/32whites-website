@@ -42,10 +42,8 @@ html:not(.story-active) .scene-tooth { opacity:.5; transform:none; }
   .story-active .patient-hero .hero-description { font-size:14px; }
   .story-active .hero-proof { flex-wrap:wrap; gap:12px; }
   .scene-tooth { object-fit:cover; object-position:65% center; opacity:calc((1 - var(--story-photo)) * .3); }
-  html:not(.story-active) .scroll-scene { height:280px; }
-  html:not(.story-active) .scene-tooth { object-fit:contain; object-position:center; opacity:.8; }
-  html:not(.story-active) .scroll-scene::after { background:linear-gradient(0deg,#fff,transparent 35%); }
-  html:not(.story-active) .patient-hero { padding-top:290px; }
+  html:not(.story-active) .scene-tooth { opacity:.3; }
+  .scroll-scene::after { background:linear-gradient(0deg,#fff,transparent 40%),linear-gradient(90deg,#ffffffe6,#fff4); }
   .scene-caption { display:none; }
   .story-active .hero-image-column { top:50%; }
   .story-active .patient-hero-photo { gap:10px; }
