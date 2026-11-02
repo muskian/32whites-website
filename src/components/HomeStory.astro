@@ -82,7 +82,8 @@ import '../styles/story.css';
       root.classList.toggle('story-active', value);
       if (copy) copy.inert = false;
       if (arrival) arrival.inert = false;
-      scene!.hidden = !value; readout!.hidden = !value;
+      // Reading mode keeps the artwork; only the pinned animation is disabled.
+      scene!.hidden = false; readout!.hidden = !value;
       motion!.hidden = !canAnimate();
       motion!.textContent = value ? 'Read without motion' : 'Enable scroll story';
       motion!.setAttribute('aria-pressed', String(!value));

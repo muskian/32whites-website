@@ -1,8 +1,11 @@
 /* Progressive homepage presentation: default/no-JS view remains ordinary reading. */
-.scroll-scene { display:none; }
+.scroll-scene { position:absolute; top:var(--header-h); width:100%; height:620px; z-index:1; overflow:hidden; pointer-events:none; background:var(--wash); }
+body:has(.scroll-scene) main { position:relative; z-index:2; }
+html:not(.story-active) .hero-shell { background:transparent; }
+html:not(.story-active) .scene-tooth { opacity:.5; transform:none; }
 .story-active { --story-copy:1; --story-photo:0; --story-scale:1; --story-turn:-18deg; --story-lift:0px; --story-wash:#f7dfe6; }
 .story-active main { position:relative; z-index:2; }
-.story-active .scroll-scene { display:block; position:fixed; inset:var(--header-h) 0 0; z-index:1; overflow:hidden; pointer-events:none; background:radial-gradient(ellipse at 80% 25%,#fffd,transparent 65%),linear-gradient(115deg,var(--story-wash),#fffafd); }
+.story-active .scroll-scene { display:block; position:fixed; inset:var(--header-h) 0 0; height:auto; z-index:1; overflow:hidden; pointer-events:none; background:radial-gradient(ellipse at 80% 25%,#fffd,transparent 65%),linear-gradient(115deg,var(--story-wash),#fffafd); }
 .scene-tooth { position:absolute; width:100%; height:100%; object-fit:contain; object-position:right center; transform:translateY(calc(var(--story-lift) * .15)); opacity:calc((1 - var(--story-photo)) * .5); mix-blend-mode:multiply; }
 .scroll-scene::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,#fffffff2,#ffffffbf 38%,#fff0 78%); }
 .scene-caption { position:absolute; right:5%; bottom:11%; font-size:11px;line-height:1.6; text-transform:uppercase; letter-spacing:.07em; color: var(--ink-2); opacity:calc(1 - var(--story-photo)); }
@@ -38,7 +41,11 @@
   .story-active .patient-hero h1 { font-size:clamp(42px,11vw,60px); max-width:520px; }
   .story-active .patient-hero .hero-description { font-size:14px; }
   .story-active .hero-proof { flex-wrap:wrap; gap:12px; }
-  .scene-tooth { object-fit:cover; object-position:65% center; opacity:calc((1 - var(--story-photo)) * .1); }
+  .scene-tooth { object-fit:cover; object-position:65% center; opacity:calc((1 - var(--story-photo)) * .3); }
+  html:not(.story-active) .scroll-scene { height:280px; }
+  html:not(.story-active) .scene-tooth { object-fit:contain; object-position:center; opacity:.8; }
+  html:not(.story-active) .scroll-scene::after { background:linear-gradient(0deg,#fff,transparent 35%); }
+  html:not(.story-active) .patient-hero { padding-top:290px; }
   .scene-caption { display:none; }
   .story-active .hero-image-column { top:50%; }
   .story-active .patient-hero-photo { gap:10px; }
